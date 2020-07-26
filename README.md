@@ -1,8 +1,8 @@
 # www.celufiamos.com
 ### Production
 Website: www.celufiamos.com
-### develop
-Website: develop.celufiamos.com
+### Develop
+Website: http://develop.celufiamos.com/
 
 ### Local Development
 1) Clone the repository

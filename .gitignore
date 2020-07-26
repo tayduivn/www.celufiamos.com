@@ -32,3 +32,13 @@ admin-dev/import/
 download/
 /img/*
 upload/
+
+*.*
+!.gitattributes
+!.gitignore
+!.gitkeep
+!*.php
+!*.js
+!*.html
+!*.tpl
+

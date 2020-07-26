@@ -1,0 +1,30 @@
+[02-Jul-2019 22:24:09 America/Bogota] PHP Fatal error:  Uncaught Exception: file /home/rw7c5tmdpij8/public_html/img/cms/logo-celufiamos.jpg is missing or invalid in /home/rw7c5tmdpij8/public_html/admin269ovijtg/filemanager/include/php_image_magician.php:330
+Stack trace:
+#0 /home/rw7c5tmdpij8/public_html/admin269ovijtg/filemanager/include/utils.php(68): imageLib->resizeImage(122, 91, 'crop')
+#1 /home/rw7c5tmdpij8/public_html/admin269ovijtg/filemanager/upload.php(77): create_img_gd('/home/rw7c5tmdp...', '/home/rw7c5tmdp...', 122, 91)
+#2 {main}
+  thrown in /home/rw7c5tmdpij8/public_html/admin269ovijtg/filemanager/include/php_image_magician.php on line 330
+[02-Jul-2019 22:24:16 America/Bogota] PHP Fatal error:  Uncaught Exception: file /home/rw7c5tmdpij8/public_html/img/cms/logo-celufiamos_1.jpg is missing or invalid in /home/rw7c5tmdpij8/public_html/admin269ovijtg/filemanager/include/php_image_magician.php:330
+Stack trace:
+#0 /home/rw7c5tmdpij8/public_html/admin269ovijtg/filemanager/include/utils.php(68): imageLib->resizeImage(122, 91, 'crop')
+#1 /home/rw7c5tmdpij8/public_html/admin269ovijtg/filemanager/upload.php(77): create_img_gd('/home/rw7c5tmdp...', '/home/rw7c5tmdp...', 122, 91)
+#2 {main}
+  thrown in /home/rw7c5tmdpij8/public_html/admin269ovijtg/filemanager/include/php_image_magician.php on line 330
+[02-Jul-2019 22:24:19 America/Bogota] PHP Fatal error:  Uncaught Exception: file /home/rw7c5tmdpij8/public_html/img/cms/logo-celufiamos_2.jpg is missing or invalid in /home/rw7c5tmdpij8/public_html/admin269ovijtg/filemanager/include/php_image_magician.php:330
+Stack trace:
+#0 /home/rw7c5tmdpij8/public_html/admin269ovijtg/filemanager/include/utils.php(68): imageLib->resizeImage(122, 91, 'crop')
+#1 /home/rw7c5tmdpij8/public_html/admin269ovijtg/filemanager/upload.php(77): create_img_gd('/home/rw7c5tmdp...', '/home/rw7c5tmdp...', 122, 91)
+#2 {main}
+  thrown in /home/rw7c5tmdpij8/public_html/admin269ovijtg/filemanager/include/php_image_magician.php on line 330
+[02-Jul-2019 22:24:27 America/Bogota] PHP Fatal error:  Uncaught Exception: file /home/rw7c5tmdpij8/public_html/img/cms/logo-celufiamos_3.jpg is missing or invalid in /home/rw7c5tmdpij8/public_html/admin269ovijtg/filemanager/include/php_image_magician.php:330
+Stack trace:
+#0 /home/rw7c5tmdpij8/public_html/admin269ovijtg/filemanager/include/utils.php(68): imageLib->resizeImage(122, 91, 'crop')
+#1 /home/rw7c5tmdpij8/public_html/admin269ovijtg/filemanager/upload.php(77): create_img_gd('/home/rw7c5tmdp...', '/home/rw7c5tmdp...', 122, 91)
+#2 {main}
+  thrown in /home/rw7c5tmdpij8/public_html/admin269ovijtg/filemanager/include/php_image_magician.php on line 330
+[02-Jul-2019 22:24:42 America/Bogota] PHP Fatal error:  Uncaught Exception: file /home/rw7c5tmdpij8/public_html/img/cms/logo.jpg is missing or invalid in /home/rw7c5tmdpij8/public_html/admin269ovijtg/filemanager/include/php_image_magician.php:330
+Stack trace:
+#0 /home/rw7c5tmdpij8/public_html/admin269ovijtg/filemanager/include/utils.php(68): imageLib->resizeImage(122, 91, 'crop')
+#1 /home/rw7c5tmdpij8/public_html/admin269ovijtg/filemanager/upload.php(77): create_img_gd('/home/rw7c5tmdp...', '/home/rw7c5tmdp...', 122, 91)
+#2 {main}
+  thrown in /home/rw7c5tmdpij8/public_html/admin269ovijtg/filemanager/include/php_image_magician.php on line 330

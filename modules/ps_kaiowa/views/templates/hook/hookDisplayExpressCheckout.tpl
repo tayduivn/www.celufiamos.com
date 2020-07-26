@@ -1,0 +1,1 @@
+<a href="{$url}" class="btn btn-primary">{l s='Proceed to checkout' d='Shop.Theme.Actions'}</a>

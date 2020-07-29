@@ -363,9 +363,33 @@ class AdminCustomersControllerCore extends AdminController
                     'type' => 'radio',
                     'label' => $this->trans('Social title', array(), 'Admin.Global'),
                     'name' => 'id_gender',
-                    'required' => false,
+                    'required' => true,
                     'class' => 't',
                     'values' => $list_genders,
+                ),
+                array(
+                    'type' => 'select',
+                    'label' => $this->trans('Tipo de documento', array(), 'Admin.Orderscustomers.Feature'),
+                    'name' => 'document_type',
+                    'options' => array(
+                        'query' => array(
+                            array(
+                                'id_group' => '1',
+                                'name' => 'Cédula de ciudadania'
+                            )
+                        ),
+                        'id' => 'id_group',
+                        'name' => 'name',
+                    ),
+                    'col' => '4'
+                ),
+                array(
+                    'type' => 'text',
+                    'label' => $this->trans('Documento', array(), 'Admin.Global'),
+                    'name' => 'document',
+                    'required' => true,
+                    'col' => '4',
+                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' 0-9!&lt;&gt;,;?=+()@#"°{}_$%:',
                 ),
                 array(
                     'type' => 'text',
@@ -377,8 +401,32 @@ class AdminCustomersControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'text',
+                    'label' => $this->trans('Segundo nombre', array(), 'Admin.Global'),
+                    'name' => 'firstname2',
+                    'required' => false,
+                    'col' => '4',
+                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' 0-9!&lt;&gt;,;?=+()@#"°{}_$%:',
+                ),
+                array(
+                    'type' => 'text',
                     'label' => $this->trans('Last name', array(), 'Admin.Global'),
                     'name' => 'lastname',
+                    'required' => true,
+                    'col' => '4',
+                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' 0-9!&lt;&gt;,;?=+()@#"°{}_$%:',
+                ),
+                array(
+                    'type' => 'text',
+                    'label' => $this->trans('Segundo apellido', array(), 'Admin.Global'),
+                    'name' => 'lastname2',
+                    'required' => false,
+                    'col' => '4',
+                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' 0-9!&lt;&gt;,;?=+()@#"°{}_$%:',
+                ),
+                array(
+                    'type' => 'text',
+                    'label' => $this->trans('Celular', array(), 'Admin.Global'),
+                    'name' => 'mobile',
                     'required' => true,
                     'col' => '4',
                     'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' 0-9!&lt;&gt;,;?=+()@#"°{}_$%:',
@@ -403,8 +451,20 @@ class AdminCustomersControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'birthday',
-                    'label' => $this->trans('Birthday', array(), 'Admin.Orderscustomers.Feature'),
+                    'label' => $this->trans('Fecha de nacimiento', array(), 'Admin.Orderscustomers.Feature'),
                     'name' => 'birthday',
+                    'required' => true,
+                    'options' => array(
+                        'days' => $days,
+                        'months' => $months,
+                        'years' => $years,
+                    ),
+                ),
+                array(
+                    'type' => 'birthday',
+                    'label' => $this->trans('Fecha expedición', array(), 'Admin.Orderscustomers.Feature'),
+                    'name' => 'f_exped',
+                    'required' => true,
                     'options' => array(
                         'days' => $days,
                         'months' => $months,

@@ -93,6 +93,9 @@ class Ps_Kaiowa extends PaymentModule
             'BANK_KAIOWA_HOUR_FIN' => array(
                 'label' => 'Hora fin mantenimiento',
             ),
+            'BANK_KAIOWA_HOUR_THANK_YOU' => array(
+                'label' => 'Thank you page URL',
+            ),
         );
         $this->name = 'ps_kaiowa';
         $this->tab = 'payments_gateways';
@@ -260,6 +263,10 @@ class Ps_Kaiowa extends PaymentModule
             $reference = base64_encode($this->context->cart->id.'|'.$this->context->customer->id.'|'.time());
             $amountInCents = $this->context->cart->getOrderTotal(true, Cart::BOTH).'00';
             $redirectURL = $this->context->link->getModuleLink('ps_kaiowa', 'responses',array('type' => 'payment'));
+        }
+
+        if(Configuration::get('BANK_KAIOWA_HOUR_THANK_YOU')) {
+            $redirectURL = Configuration::get('BANK_KAIOWA_HOUR_THANK_YOU');
         }
         return array(
             'currency' => $this->context->currency->iso_code,

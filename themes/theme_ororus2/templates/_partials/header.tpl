@@ -22,7 +22,6 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
-
 {block name='header_top'}
   <div class="header-top">
     <div class="container">
@@ -43,6 +42,7 @@
     </div>
   </div>
 	<div class="header-bottom">
+		<div class="alert alert-danger text-center" style="margin-bottom: 55px;" role="alert"><h2>Estamos en etapa de pruebas, lo que se haga durante este período no tendrá validez.</h2></div>	
 		<div class="container">
 			{hook h='displaymegamenu'}
 		</div>

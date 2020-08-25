@@ -155,7 +155,7 @@ class Ps_Kaiowa extends PaymentModule
     public function hookDisplayCustomerAccountForm($params) {
         return '<div class="col-md-12" style="text-align:center;margin-bottom:20px">
         <a href="/content/17-terminos-y-condiciones" target="_new" class="btn btn-secundary form-control-submit">Ver términos y condiciones</a>
-        <a href="/18-politica-de-manejo-de-informacion-de-datos-personales" target="_new" class="btn btn-secundary form-control-submit">Ver póliticas de tratamiento</a>
+        <a href="/content/18-politica-de-manejo-de-informacion-de-datos-personales" target="_new" class="btn btn-secundary form-control-submit">Ver póliticas de tratamiento</a>
         </div>';
     }
 

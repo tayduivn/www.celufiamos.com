@@ -67,7 +67,7 @@
           </div>
           <div id="consignation" class="mb-2">
             <h3 class="text-center">{l s='O paga por consignación bancaria' d='Modules.ps_kaiowa.myaccount'}</h3>
-            {include file='module:ps_wirepayment/views/templates/hook/_partials/payment_infos.tpl'}
+            {include file='module:ps_kaiowa/views/templates/hook/_partials/payment_infos.tpl'}
           </div>
           <form class="text-right">
             <button type="button" class="btn btn-success payment-wompi">{l s='Pagar con wompi' d='Modules.ps_kaiowa.myaccount'}</button>

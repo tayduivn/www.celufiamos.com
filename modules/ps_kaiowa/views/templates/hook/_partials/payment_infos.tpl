@@ -22,3 +22,15 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+
+<p>{l s='Debes indicar el número de tu cédula y el número de convenio 86553 a nombre de CELUFIAMOS, esta forma de pago solo te permite hacer el abono exacto al valor de tu cuota adeudada.' d='Modules.Wirepayment.Shop'}</p>
+<dl>
+    <dt>{l s='Amount' d='Modules.Wirepayment.Shop'}</dt>
+    <dd id="total-consig">{$total}</dd>
+    <dt>{l s='Name of account owner' d='Modules.Wirepayment.Shop'}</dt>
+    <dd>{$bankwireOwner}</dd>
+    <dt>{l s='Convenio' d='Modules.Wirepayment.Shop'}</dt>
+    <dd>{$bankwireDetails nofilter}</dd>
+    <dt>{l s='Bank name' d='Modules.Wirepayment.Shop'}</dt>
+    <dd>{$bankwireAddress nofilter}</dd>
+</dl>

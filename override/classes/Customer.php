@@ -7,6 +7,8 @@ class Customer extends CustomerCore
     public $document;
     public $f_exped;
     public $mobile;
+    public $politics;
+    public $habeas;
 
 
 	    public static $definition = array(
@@ -22,6 +24,8 @@ class Customer extends CustomerCore
             'firstname' => array('type' => self::TYPE_STRING, 'validate' => 'isCustomerName', 'required' => true, 'size' => 255),
             'firstname2' => array('type' => self::TYPE_STRING, 'validate' => 'isCustomerName', 'size' => 255),
             'mobile' => array('type' => self::TYPE_STRING, 'validate' => 'isPhoneNumber', 'required' => true, 'size' => 255),
+            'politics' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'habeas' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 
             'email' => array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'required' => true, 'size' => 255),
             'passwd' => array('type' => self::TYPE_STRING, 'validate' => 'isPasswd', 'required' => true, 'size' => 255),

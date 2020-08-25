@@ -26,9 +26,9 @@
 class ContactControllerCore extends FrontController
 {
     public $php_self = 'contact';
-    public $auth = true;
+    public $auth = false;
     public $authRedirection = 'my-account';
-    public $ssl = true;    
+    public $ssl = true;
 
     /**
      * Assign template vars related to page content.

@@ -196,10 +196,29 @@ class CustomerFormatter extends CustomerFormatterCore
                         'Receive offers from our partners', [], 'Shop.Theme.Customeraccount'
                     )
                 )
-                ->setRequired($this->partner_optin_is_required)
+                ->setRequired(false)
             ;
         }
-
+        $format['politics'] = (new FormField())
+            ->setName('optin')
+            ->setType('checkbox')
+            ->setLabel(
+                Context::getContext()->getTranslator()->trans(
+                    'Acepto términos y condiciones', [], 'Shop.Theme.Customeraccount'
+                )
+            )
+            ->setRequired(true)
+        ;
+        $format['habeas'] = (new FormField())
+            ->setName('optin')
+            ->setType('checkbox')
+            ->setLabel(
+                Context::getContext()->getTranslator()->trans(
+                    'Autorizo tratamiento de datos personales', [], 'Shop.Theme.Customeraccount'
+                )
+            )
+            ->setRequired(true)
+        ;
         // ToDo, replace the hook exec with HookFinder when the associated PR will be merged
         $additionalCustomerFormFields = Hook::exec('additionalCustomerFormFields', array(), null, true);
 

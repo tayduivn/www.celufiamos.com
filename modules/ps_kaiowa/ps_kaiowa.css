@@ -1,0 +1,133 @@
+.right_block,
+.right_block span {
+    text-align: right !important;
+    padding-right: 1rem;
+}
+.product-prices .current-price,
+.product-prices .product-price {
+  margin-bottom: 0;
+}
+
+.product-price-and-shipping .quotes-price {
+  font-size: 13px;
+  font-weight: 400;
+  color: #ec0a0a;
+  max-width: 80%;
+  margin: auto;
+}
+.right_block .quotes-price,
+.product-prices .quotes-price {
+  font-weight: 400;
+  font-size: 15px;
+  color: #582A84;
+  margin-bottom: 3px;
+  margin-top: 3px;
+}
+.product-line-info .quotes-price {
+  font-weight: 400;
+  font-size: 12px;
+} 
+.right_block .quotes-price {
+  font-size: 10px;
+  padding-right: 17px;
+}
+.right_block .product-price {
+  margin-top: 0 !important;
+}
+#blockcart-modal .product-price {
+  margin-bottom: 0;
+}
+.cart-disabled {
+  pointer-events: none;
+  opacity: 0.4;
+}
+.pt_custommenu:before {
+  content: 'CUOTAS';
+  width: 100% !important;
+  position: absolute;
+  text-align: center;
+  top: -27px;
+  font-size: 16px !important;
+  color: #582A84;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.pt_custommenu {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.pt_custommenu div.pt_menu {
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 1;
+  text-align: center;
+  border-left: 1px solid #582A84;
+}
+
+.pt_custommenu div.pt_menu:last-child {
+  border-right: 1px solid #582A84;  
+}
+.pt_custommenu .pt_menu .parentMenu span:before {
+  content: '$';
+}
+
+.product-line-grid-right .product-price,
+.product-line-grid-right .quotes-price {
+  color: #582A84;
+  line-height: initial !important;
+  text-align: center;
+}
+.product-line-grid-right .price {
+  text-align: center;
+}
+
+.product-line-grid-right .quotes-price div {
+  font-weight: 400;
+}
+
+.product-quantity .qty {
+  display: none;
+}
+.product-note {
+  margin-bottom: 10px;
+}
+.text-center {
+  text-align: center;
+}
+.balance-title {
+  font-size: 5rem;
+}
+.balance h5{
+  margin-top: 2rem;
+}
+.allow-category {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.allow-category li {
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 1;
+}
+.allow-category a {
+  color: #582A84;
+  font-size: 33px;
+  font-weight: 600;
+  line-height: 23px;
+}
+.allow-category a:before {
+    content: '$';
+}
+.allow-category a:after {
+  content: 'MENSUALES';
+  clear: both;
+  display: block;
+  font-weight: 600;
+  font-size: 16px;
+}
+.hidden {
+  display: none;
+}

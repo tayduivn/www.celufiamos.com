@@ -539,7 +539,9 @@ class Ps_Kaiowa extends PaymentModule
                 if ($price > $cuota) {
                     $this->smarty->assign(array(
                         'cuota' => $cuota,
-                        'url_contact' => $this->context->link->getPageLink('contact', true)
+                        'url_contact' => $this->context->link->getPageLink('contact', true),
+                        'logged' => $this->context->cookie->isLogged(),
+                        'url_login' => $this->context->link->getPageLink('authentication')
                     ));
                     return $this->display(__FILE__, 'views/templates/hook/hookDisplayProductPriceBlockModal.tpl');
                 }  

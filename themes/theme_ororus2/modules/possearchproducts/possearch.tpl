@@ -50,7 +50,7 @@
 	    	<a href="/mi-cuenta" class="my-account"><span>{l s='Mi Cuenta'}</span></a>
 	    </div>
 	    <div class="col-xs-4 col-md-2 help">
-	    	<a href="/content/10-AYUDA" class="help"><span>{l s='Ayuda'}</span></a>
+	    	<a href="/content/13-preguntas-frecuentes" class="help"><span>{l s='Ayuda'}</span></a>
 	    </div>
 
 <!-- /pos search module TOP -->

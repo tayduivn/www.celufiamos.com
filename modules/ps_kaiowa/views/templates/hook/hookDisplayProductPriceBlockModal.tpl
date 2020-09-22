@@ -16,7 +16,7 @@
 {else}
 <div class="alert alert-info my-5" role="alert" style="margin-top: 3rem; margin-bottom: 3rem; text-align: center">
 <p>
-{l s='Debes consultar los equipos que se ajusten a tu cuota asignada.' d='Modules.ps_kaiowa.myaccount'}
+{l s='Este equipo no se encuentra en el rango de la cuota que a la que puedes acceder' d='Modules.ps_kaiowa.myaccount'}
 </p>
 <p>{l s='Tu cuota asignada es:' d='Modules.ps_kaiowa.myaccount'}</p>
 <p><h2>{Tools::displayPrice($cuota)}</h2></p>

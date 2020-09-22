@@ -79,7 +79,7 @@ class CustomerFormatter extends CustomerFormatterCore
                 ->setName('f_exped')
                 ->setLabel(
                     Context::getContext()->getTranslator()->trans(
-                        'Fecha de expedicion', [], 'Shop.Forms.Labels'
+                        'fecha de expedición de cedula', [], 'Shop.Forms.Labels'
                     )
                 )
                 ->addAvailableValue('placeholder', 'YYYY-MM-DD')

@@ -91,6 +91,7 @@
 }
 .product-note {
   margin-bottom: 10px;
+  display: none;
 }
 .text-center {
   text-align: center;

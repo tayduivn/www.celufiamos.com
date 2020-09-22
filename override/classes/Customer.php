@@ -9,6 +9,7 @@ class Customer extends CustomerCore
     public $mobile;
     public $politics;
     public $habeas;
+    public $id_celufiamos_store;
 
 
 	    public static $definition = array(
@@ -26,6 +27,7 @@ class Customer extends CustomerCore
             'mobile' => array('type' => self::TYPE_STRING, 'validate' => 'isPhoneNumber', 'required' => true, 'size' => 255),
             'politics' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'habeas' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'id_celufiamos_store' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 
             'email' => array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'required' => true, 'size' => 255),
             'passwd' => array('type' => self::TYPE_STRING, 'validate' => 'isPasswd', 'required' => true, 'size' => 255),

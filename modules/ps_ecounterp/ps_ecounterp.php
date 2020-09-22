@@ -116,7 +116,7 @@ class Ps_Ecounterp extends Module {
 
   public function install() {
 		$sql = '
-			CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'_ecount_erp_log` (
+			CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ecount_erp_log` (
 				`id` bigint(20) NOT NULL AUTO_INCREMENT,
 				`id_order` int(11) NOT NULL,
 				`log` text NOT NULL,

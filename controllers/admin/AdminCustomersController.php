@@ -27,6 +27,9 @@
 /**
  * @property Customer $object
  */
+if (file_exists(dirname(__FILE__).'/../../modules/ps_store/classes/store.php')) {
+    require_once (dirname(__FILE__).'/../../modules/ps_store/classes/store.php');    
+}
 class AdminCustomersControllerCore extends AdminController
 {
     protected $delete_mode;
@@ -153,6 +156,16 @@ class AdminCustomersControllerCore extends AdminController
                 'search' => false,
                 'havingFilter' => true,
             ),
+            'id_celufiamos_store' => array(
+                'title' => $this->trans('Tienda', array(), 'Admin.Orderscustomers.Feature'),
+                'type' => 'select',
+                'search' => true,
+                'havingFilter' => true,
+                'list' => storeCore::getFilterStores(),
+                'filter_key' => 'a!id_celufiamos_store',
+                'filter_type' => 'int',
+                'order_key' => 'store'  
+            ),
         ));
 
         $this->shopLinkType = 'shop';
@@ -233,7 +246,9 @@ class AdminCustomersControllerCore extends AdminController
         if ($this->_list) {
             foreach ($this->_list as &$row) {
                 $row['badge_success'] = $row['total_spent'] > 0;
+                $row['id_celufiamos_store'] = storeCore::getStoreNameById($row['id_celufiamos_store']);
             }
+
         }
     }
 
@@ -351,14 +366,34 @@ class AdminCustomersControllerCore extends AdminController
         $years = Tools::dateYears();
         $months = Tools::dateMonths();
         $days = Tools::dateDays();
-
         $groups = Group::getGroups($this->default_form_language, true);
+        $stores = storeCore::getStores();
+        $renderStore = array();
+        $renderStore[0]['id_celufiamos_store'] = 0;
+        $renderStore[0]['store'] = 'default';
+        foreach($stores as $store) {
+            $renderStore[$store['id_celufiamos_store']] = array(
+                'id_celufiamos_store' => $store['id_celufiamos_store'],
+                'store' => $store['store']
+            ); 
+        }
         $this->fields_form = array(
             'legend' => array(
                 'title' => $this->trans('Customer', array(), 'Admin.Global'),
                 'icon' => 'icon-user',
             ),
             'input' => array(
+                array(
+                    'type' => 'select',
+                    'label' => $this->trans('Tienda', array(), 'Admin.Orderscustomers.Feature'),
+                    'name' => 'id_celufiamos_store',
+                    'options' => array(
+                        'query' => $renderStore,
+                        'id' => 'id_celufiamos_store',
+                        'name' => 'store',
+                    ),
+                    'col' => '4'
+                ),                
                 array(
                     'type' => 'radio',
                     'label' => $this->trans('Social title', array(), 'Admin.Global'),
@@ -383,6 +418,7 @@ class AdminCustomersControllerCore extends AdminController
                     ),
                     'col' => '4'
                 ),
+
                 array(
                     'type' => 'text',
                     'label' => $this->trans('Documento', array(), 'Admin.Global'),

@@ -140,7 +140,7 @@ class Ps_Ecounterp extends Module {
 		if (
     	!parent::install()
 			|| !$this->registerHook('actionOrderStatusPostUpdate')
-			|| !$this->registerHook('displayAdminOrderRight')
+			|| !$this->registerHook('displayAdminOrderRight') 
 			|| !$this->Db::getInstance()->Execute($sql)
 		) {
 			return false;

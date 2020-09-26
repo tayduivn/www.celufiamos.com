@@ -27,6 +27,7 @@
 
 
 <table width="100%" id="body" border="0" cellpadding="0" cellspacing="0" style="margin:0;">
+{if false}
 	<!-- Invoicing -->
 	<tr>
 		<td colspan="12">
@@ -35,7 +36,7 @@
 
 		</td>
 	</tr>
-
+{/if}
 	<tr>
 		<td colspan="12" height="30">&nbsp;</td>
 	</tr>

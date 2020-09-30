@@ -10,7 +10,11 @@
 					{$cuota}
 				</h1>
 				<small class="col-lg-12">{l s='Puedes acceder a equipos menores o iguales a este valor:' d='Shop.Theme.Customeraccount'}</small>
+				{if $cuota == 0}
+				<h5 class="col-lg-12"> {l s='Lo siento, no dispones de una cuota para acceder a nuestro equipos' d='Shop.Theme.Customeraccount'} </h5>
+				{else}
 				<h5 class="col-lg-12"> {l s='Conoce los equipos a los que puedes acceder' d='Shop.Theme.Customeraccount'} </h5>
+				{/if}
 				<ul class="allow-category col-lg-12">
 					{foreach from=$categories item=category}
 	    				<li><a href="{$category.link}">{$category.name}</a></li>

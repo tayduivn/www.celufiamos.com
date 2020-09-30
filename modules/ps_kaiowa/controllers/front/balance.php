@@ -1,7 +1,7 @@
 <?php
 class ps_kaiowaBalanceModuleFrontController extends ModuleFrontController
 {
-	public $auth = true;
+	public $auth = false;
     public $authRedirection = 'my-account';
     public $ssl = true;
 

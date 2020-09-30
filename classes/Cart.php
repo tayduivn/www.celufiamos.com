@@ -81,6 +81,10 @@ class CartCore extends ObjectModel
     /** @var int Carrier ID */
     public $id_carrier = 0;
 
+
+    /** @var int kaiowa obligacion ID */
+    public $id_obligacion = 0;
+
     /** @var string Object last modification date */
     public $date_upd;
 
@@ -128,6 +132,7 @@ class CartCore extends ObjectModel
             'id_customer' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
             'id_guest' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
             'id_lang' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'id_obligacion' => array('type' => self::TYPE_INT),
             'recyclable' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'gift' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'gift_message' => array('type' => self::TYPE_STRING, 'validate' => 'isMessage'),

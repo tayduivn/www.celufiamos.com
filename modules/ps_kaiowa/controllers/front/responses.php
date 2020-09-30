@@ -90,7 +90,14 @@ class ps_kaiowaResponsesModuleFrontController extends ModuleFrontController
 					false,
 					$customer->secure_key
 				);
+				$cart->id_obligacion = $response['id_obligacion'];
+				$cart->update();
 			}
+		}
+		if ($response['id_transaccion'] && $response['err_code'] == 0) {
+			$cart_id = $response['id_transaccion'];
+			$cart = new cart($cart_id);
+			$cart->delete();
 		}
 	}
 

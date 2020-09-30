@@ -28,16 +28,17 @@
  * @since 1.5.0
  */
 
-
+ini_set('display_errors',true);
+error_reporting(E_ALL);
 class ps_kaiowaResponsesModuleFrontController extends ModuleFrontController
 {
 	
 	/**
 	 * @see FrontController::initContent()
 	 */
-	mail('sebasca5gz@gmail.com','REQUEST', Tools::getValue('type'));
 	public function initContent()
 	{
+		mail('sebasca5gz@gmial.com','PRUEBA RESPUESTA', 'entre');
 		switch(Tools::getValue('type')) {
 			case 'user':
 				$this->_log('user');
@@ -52,6 +53,7 @@ class ps_kaiowaResponsesModuleFrontController extends ModuleFrontController
 				$this->_validateCart();
 			break;
 		}
+		die('end');
 	}
 
 	private function _log($type) {
@@ -67,6 +69,7 @@ class ps_kaiowaResponsesModuleFrontController extends ModuleFrontController
 		$log .= "\nPARSE RESPONSE\n";
 		$log .= print_r($response,true);
 		file_put_contents('./logs/'.date("Y-m-d").'-'.$type.'.log', $log, FILE_APPEND);
+		mail('sebasca5gz@gmail.com','LOG', $log);
 	}
 
 	private function _validateCart() {
@@ -133,16 +136,6 @@ class ps_kaiowaResponsesModuleFrontController extends ModuleFrontController
 				$customer->active = true;
 				$customer->logged = 1;
 				$customer->update();
-				/*
-				$this->context->cookie->id_customer = (int)($customer->id);
-				$this->context->cookie->customer_lastname = $customer->lastname;
-				$this->context->cookie->customer_firstname = $customer->firstname;
-				$this->context->cookie->logged = $customer->logged;
-				$this->context->cookie->is_guest = $customer->isGuest();
-				$this->context->cookie->passwd = $customer->passwd;
-				$this->context->cookie->email = $customer->email;
-				$this->context->customer = $customer;
-				*/
 				Db::getInstance()->execute('
 					UPDATE `'._DB_PREFIX_.'kaiowa_validations` SET `cupo` = '.(int)$response['cupo_asignado']
 					.' WHERE `id_customer` = '.(int)$response['id_transaccion']

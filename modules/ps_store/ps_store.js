@@ -2,6 +2,76 @@
 	$(document).ready(function($) {
 		var $body = $('body');
 
+		$body.on('click','#open-payment',function(e) {
+			e.preventDefault();
+			$body.find('#save-payment*').attr('data-reference', $(this).attr('data-reference'));
+		});
+
+		$body.on('click','#save-payment',function(e) {
+			e.preventDefault();
+			var reference = $(this).attr('data-reference');
+			var quotas = $body.find('#quotes').val();
+			if (window.confirm("¿Desea registrar el pago de "+quotas+" cuota(s) para esta orden?")) { 
+				$.ajax({
+				  	type: "POST",
+				  	url: window.location.href,
+				  	data: {
+				  		ajax: true,
+				  		action: 'save-payment',
+				  		form: reference,
+				  		cuotas: quotas
+				  	},
+						success: function(data) {
+							data = JSON.parse(data);
+							if (data.haserrors) {
+								alert(data.message);
+							} else {
+								alert(data.message);
+								$body.find('button[data-dismiss=modal]').click();
+								$body.find('#cancel-payment').remove();
+								$body.find('#date-payment').html(data.info.date);
+								$body.find('#payment-cuotas').html(data.info.quotas);
+								$body.find('#total-payment').html(data.info.total);
+								$body.find('#payment-approved').removeClass('hidden');
+								$body.find('#print').removeClass('hidden');
+								$body.find('#open-payment').remove();
+							}
+						},
+						fail: function(data) {
+							alert('Error: No pudo encontrarse el documento, contacte al administrador');
+						},
+				});
+			}
+		});		
+
+		$body.on('click','#cancel-payment',function(e) {
+			e.preventDefault();
+			var reference = $(this).attr('data-reference');
+			if (window.confirm("¿Desea cancelar esta orden?")) { 
+				$.ajax({
+				  	type: "POST",
+				  	url: window.location.href,
+				  	data: {
+				  		ajax: true,
+				  		action: 'cancel-order',
+				  		form: reference
+				  	},
+						success: function(data) {
+							data = JSON.parse(data);
+							if (data.haserrors) {
+								alert(data.message);
+							} else {
+								alert(data.message);
+								window.location.href = window.location.origin + window.location.pathname; 
+							}
+						},
+						fail: function(data) {
+							alert('Error: No pudo encontrarse el documento, contacte al administrador');
+						},
+				});
+			}
+		});
+
 		$body.on('click','#search-pay-customer',function(e) {
 			e.preventDefault();
 			var doc = $body.find('#search_pay_custmer').val();

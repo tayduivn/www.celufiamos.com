@@ -1,5 +1,6 @@
 <?php
 require_once(dirname(__FILE__).'/../../classes/store.php');
+require_once(dirname(__FILE__).'/../../classes/cuotas.php');
 
 class ps_storeStoreModuleFrontController extends ModuleFrontController
 {
@@ -23,6 +24,57 @@ class ps_storeStoreModuleFrontController extends ModuleFrontController
 
   private function _ajax_actions() {
 		switch (Tools::getValue('action')) {
+			case 'save-payment':
+				try {
+					$date = date('Y-m-d H:i:s');
+					$id = Tools::getValue('form');
+					$Order = new Order($id);
+					$history = new OrderHistory();
+	        $history->id_order = (int)$id;
+	        $history->id_employee = 0;
+	        $history->changeIdOrderState(2, $history->id_order);
+					$cuotas = new cuotasCore();
+					$cuotas->value = $Order->getTotalProductsWithoutTaxes() * Tools::getValue('cuotas');
+					$cuotas->quotas = Tools::getValue('cuotas');
+					$cuotas->id_customer = $Order->id_customer;
+					$cuotas->payment_method = 'Pago en tienda';
+					$cuotas->id_order = $history->id_order;
+					$cuotas->date = $date; 
+					$cuotas->add();
+
+					$response['haserrors'] = false;
+					$response['message'] = 'Pago registrado';
+					$response['info'] = array(
+						'date' => $date,
+						'quotas' => $cuotas->quotas,
+						'total' => Tools::displayPrice($cuotas->value),
+					);
+
+					die(json_encode($response));
+				} catch (Exception $e) {
+					$response['haserrors'] = true;
+					$response['message'] = 'Error al generar el pago';
+					die(json_encode($response));
+				}
+				die();
+			break;			
+			case 'cancel-order':
+				try {
+					$id = Tools::getValue('form');
+					$history = new OrderHistory();
+	        $history->id_order = (int)$id;
+	        $history->id_employee = 0;
+	        $history->changeIdOrderState(6, $history->id_order);
+					$response['haserrors'] = false;
+					$response['message'] = 'Orden Cancelada';
+					die(json_encode($response));
+				} catch (Exception $e) {
+					$response['haserrors'] = true;
+					$response['message'] = 'Al Cancelar la orden';
+					die(json_encode($response));
+				}
+				die();
+			break;
 			case 'search-payments-customer':
 				$form = Tools::getValue('form');
 				$id_customer = $this->customerExistsByDocument($form['document']);
@@ -151,7 +203,7 @@ class ps_storeStoreModuleFrontController extends ModuleFrontController
 					'displayExpressCheckout',
 					array(
 						'storecart' => $Cart,
-						'storeurl' => $this->context->link->getModuleLink('ps_store', 'store').'?user='.$Customer->id.'&cart='.$Cart->id,
+						'storeurl' => $this->context->link->getModuleLink('ps_store', 'store').'?document='.$Customer->id.'&cart='.$Cart->id,
 						'storedoc' => $Customer->document,
 						'storecartid' => $Cart->id
 					),
@@ -227,7 +279,7 @@ class ps_storeStoreModuleFrontController extends ModuleFrontController
 						'actionSubmitAccountBefore',
 						array(
 							'customer' => $Customer,
-							'redirect' => $this->context->link->getModuleLink('ps_store', 'store').'?user='.$Customer->id,
+							'redirect' => $this->context->link->getModuleLink('ps_store', 'store').'?document='.$Customer->id,
 							'from-store' => true
 						),
 						null,
@@ -340,7 +392,18 @@ class ps_storeStoreModuleFrontController extends ModuleFrontController
       }
 
       return $rq;
- }  
+ }
+
+ 	private function _createPaymentForm() {
+ 		$Order = new Order(Order::getOrderByCartId((int)(Tools::getValue('cart'))));
+ 		$products = $Order->getProducts();
+		$this->context->smarty->assign(array(
+			'paymentForm' => 'true',
+			'reference' => $Order->reference,
+			'id' => $Order->id,
+			'products' => $products
+		));
+ 	}
 
 	/**
 	 * @see FrontController::initContent()
@@ -351,8 +414,10 @@ class ps_storeStoreModuleFrontController extends ModuleFrontController
 			$this->_ajax_actions();
 		}
 
-		if (Tools::getValue('document')) {
+		if (Tools::getValue('document') && !Tools::getValue('cart')) {
 			$this->_createOrderForm();	
+		} else if (Tools::getValue('document') && Tools::getValue('cart')) {
+			$this->_createPaymentForm();
 		}
 		$paymentList = storeCore::getOrdersByStoreId(
 			$this->context->customer->id_celufiamos_store,

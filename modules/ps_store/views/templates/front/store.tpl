@@ -1,5 +1,6 @@
 {extends file='customer/page.tpl'}
 {block name='page_content'}
+  {if !$paymentForm}
   <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
       <a class="nav-link active" id="sell-tab" data-toggle="tab" href="#sell" role="tab" aria-controls="sell" aria-selected="true">VENDER</a>
@@ -22,4 +23,7 @@
       {include file="modules/ps_store/views/templates/front/list.tpl" paymentList=$paymentList}
     </div>
   </div>
+  {else}
+    {include file="modules/ps_store/views/templates/front/payment.tpl"}
+  {/if}
 {/block}

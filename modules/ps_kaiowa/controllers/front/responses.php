@@ -70,34 +70,20 @@ class ps_kaiowaResponsesModuleFrontController extends ModuleFrontController
 	private function _validateCart() {
 		$inputJSON = file_get_contents('php://input');
 		$response = json_decode($inputJSON, true);
-		if ($response['id_transaccion'] && $response['err_code'] != 0) {
+		if ($response['id_transaccion']) {
 			$cart_id = $response['id_transaccion'];
-			if(!empty($cart_id)) {
-				$cart = new cart($cart_id);
-				$customer = new Customer($cart->id_customer);
-				$currency = Context::getContext()->currency;
-				$mailVars = array();
-				$total = (float)$cart->getOrderTotal(true, Cart::BOTH);
-				$state = 16;
-				$this->module->validateOrder(
-					$cart->id,
-					$state,
-					$total,
-					'Credito no aprobado',
-					NULL,
-					$mailVars,
-					(int)$currency->id,
-					false,
-					$customer->secure_key
-				);
-				$cart->id_obligacion = $response['id_obligacion'];
-				$cart->update();
-			}
-		} elseif ($response['err_code'] == 0) {
-			if(strstr($response['msg'],'Crédito previamente generado')) {
-				$cart_id = $response['id_transaccion'];
-				$cart = new cart($cart_id);
-				$cart->delete();				
+			$cart = new cart($cart_id);
+			if($response['err_code'] != 0) {
+				$cart->delete();
+			} else {
+				if(strstr($response['msg'],'Crédito previamente generado')) {
+					$cart_id = $response['id_transaccion'];
+					$cart = new cart($cart_id);
+					$cart->delete();				
+				} else {
+					$cart->id_obligacion = $response['id_obligacion'];
+					$cart->update();
+				}
 			}
 		}
 	}

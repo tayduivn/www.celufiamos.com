@@ -27,9 +27,6 @@
 /**
  * @since 1.5.0
  */
-
-ini_set('display_errors',true);
-error_reporting(E_ALL);
 class ps_kaiowaResponsesModuleFrontController extends ModuleFrontController
 {
 	
@@ -38,7 +35,6 @@ class ps_kaiowaResponsesModuleFrontController extends ModuleFrontController
 	 */
 	public function initContent()
 	{
-		mail('sebasca5gz@gmial.com','PRUEBA RESPUESTA', 'entre');
 		switch(Tools::getValue('type')) {
 			case 'user':
 				$this->_log('user');
@@ -68,8 +64,7 @@ class ps_kaiowaResponsesModuleFrontController extends ModuleFrontController
 		$log .= print_r($_REQUEST,true);
 		$log .= "\nPARSE RESPONSE\n";
 		$log .= print_r($response,true);
-		file_put_contents('./logs/'.date("Y-m-d").'-'.$type.'.log', $log, FILE_APPEND);
-		mail('sebasca5gz@gmail.com','LOG', $log);
+		file_put_contents(_PS_ROOT_DIR_.'/logs/'.date("Y-m-d").'-'.$type.'.log', $log, FILE_APPEND);
 	}
 
 	private function _validateCart() {

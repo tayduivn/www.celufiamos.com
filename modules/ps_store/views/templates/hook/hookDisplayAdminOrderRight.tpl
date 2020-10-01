@@ -13,15 +13,15 @@
     </tr>
     <tr>
       <td><b>Valor Obligación</b></td>
-      <td>{$kaiowa->valorobligacion}</td>
+      <td>{Tools::displayPrice($kaiowa->valorobligacion)}</td>
     </tr>
     <tr>
       <td><b>Saldo Obligación</b></td>
-      <td>{$kaiowa->saldo_obligacion}</td>
+      <td>{Tools::displayPrice($kaiowa->saldo_obligacion)}</td>
     </tr>       
     <tr>
       <td><b>Cuota</b></td>
-      <td>{$kaiowa->valor_cuota}</td>
+      <td>{Tools::displayPrice($kaiowa->valor_cuota)}</td>
     </tr>
     <tr>
       <td><b>Proxima Cuota</b></td>

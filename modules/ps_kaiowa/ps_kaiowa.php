@@ -160,6 +160,23 @@ class Ps_Kaiowa extends PaymentModule
     }
 
     public function hookDisplayOrderDetail($params) {
+        $cart = new Cart($params['order']->id_cart);
+        require_once(dirname(__FILE__).'/../ps_store/classes/cuotas.php');
+
+        $ws_response = Hook::exec('actionWSKaiowa', array('type' => 'status'), null, true);
+        $status = json_decode($ws_response['ps_kaiowa']);
+        
+        foreach ($status->datos->cuposaldo->creditos_vigentes as $credito) {
+            if($credito->id_obligacion == $cart->id_obligacion) {
+                $data = $credito;
+                break;
+            }
+        }
+        $payments = cuotasCore::getPaymentsByIdOrder($params['order']->id);
+        $this->smarty->assign(array(
+            'kaiowa' => $data,
+            'pagos' => $payments
+        ));
         return $this->display(__FILE__, 'views/templates/hook/hookDisplayOrderDetail.tpl');
     }
 

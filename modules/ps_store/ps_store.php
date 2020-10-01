@@ -41,10 +41,33 @@ class Ps_Store extends Module {
 			|| !Db::getInstance()->execute($sql)
 			|| !$this->registerHook('displayCustomerAccount')
 			|| !$this->registerHook('header')
+			|| !$this->registerHook('displayAdminOrderLeft') 
 		) {
 			return false;
 		}
 		return true;
+	}
+
+	public function hookDisplayAdminOrderLeft($params) {
+		$Order = new Order($params['id_order']);
+		$cart = new Cart($Order->id_cart);
+    require_once(dirname(__FILE__).'/../ps_store/classes/cuotas.php');
+
+    $ws_response = Hook::exec('actionWSKaiowa', array('type' => 'status'), null, true);
+    $status = json_decode($ws_response['ps_kaiowa']);
+    
+    foreach ($status->datos->cuposaldo->creditos_vigentes as $credito) {
+        if($credito->id_obligacion == $cart->id_obligacion) {
+            $data = $credito;
+            break;
+        }
+    }
+    $payments = cuotasCore::getPaymentsByIdOrder($Order->id);
+    $this->smarty->assign(array(
+        'kaiowa' => $data,
+        'pagos' => $payments
+    ));
+		return $this->display(__FILE__, 'views/templates/hook/hookDisplayAdminOrderRight.tpl');
 	}
 
 	public function uninstall()

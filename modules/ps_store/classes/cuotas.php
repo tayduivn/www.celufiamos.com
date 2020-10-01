@@ -26,6 +26,13 @@ class cuotasCore extends ObjectModel
 		)
 	);
 
+	public function getPaymentsByIdOrder($id_order) {
+		if(empty($id_order))
+			return null;
+
+		$sql = 'SELECT * FROM '._DB_PREFIX_.'quotes_payments where id_order = "'.$id_order.'"';
+		return Db::getInstance()->executeS($sql);
+	}
 	public function __construct($id = null, $id_lang = null, $id_shop = null)
   {
     parent::__construct($id, $id_lang, $id_shop);

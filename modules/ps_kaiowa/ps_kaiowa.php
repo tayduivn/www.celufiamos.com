@@ -308,7 +308,7 @@ class Ps_Kaiowa extends PaymentModule
         }
 
         if(Configuration::get('BANK_KAIOWA_HOUR_THANK_YOU')) {
-            $redirectURL = Configuration::get('BANK_KAIOWA_HOUR_THANK_YOU');
+            $redirectURL = Tools::getHttpHost(true) . __PS_BASE_URI__ . Configuration::get('BANK_KAIOWA_HOUR_THANK_YOU');
         }
         return array(
             'currency' => $this->context->currency->iso_code,

@@ -96,6 +96,7 @@
 
 		  		$.each(credits.datos.cuposaldo.creditos_vigentes, function( index, value ) {
 		  				if(value.id_obligacion == id) {
+		  					$('#paymentQuotes option').remove();
 		  					for (i = 1; i <= value.cuotas_pendientes; i++) {
 		  						$('#paymentQuotes').append('<option value="'+i+'">'+i+' Cuota</option>').attr('data-id',id);
 		  					}
@@ -125,14 +126,32 @@
 						credits = JSON.parse(prestashop.modules.ps_kaiowa.credits);
 	  		$.each(credits.datos.cuposaldo.creditos_vigentes, function( index, value ) {
   				if(value.id_obligacion == id) {
-
   					if(quotes > 1) {
   						value.wompi.amountInCents = value.wompi.amountInCents * quotes;	
   					}
   					$('body').css('overflow','auto');
   					var checkout = new WidgetCheckout(value.wompi);
   					checkout.open(function(result) {
-  						window.location.reload();
+  						console.log(result);
+  						$.ajax({
+						  	type: "POST",
+						  	url: window.location.href,
+						  	data: {
+						  		ajax: true,
+						  		action: 'save-payment',
+						  		form: result,
+						  		cuotas: quotes
+						  	},
+		  					success: function(data) {
+		  						console.log(data);
+		  					},
+		  					fail: function(data) {
+		  						alert('Error al registrar el pago, contacte al administrador');
+		  					},
+						  });
+
+
+  						//window.location.reload();
 						});
   				}
 	  		})

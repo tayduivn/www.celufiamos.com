@@ -51,9 +51,10 @@ class Ps_Store extends Module {
 	public function hookDisplayAdminOrderLeft($params) {
 		$Order = new Order($params['id_order']);
 		$cart = new Cart($Order->id_cart);
+		$Customer = new Customer($Order->id_customer);
     require_once(dirname(__FILE__).'/../ps_store/classes/cuotas.php');
 
-    $ws_response = Hook::exec('actionWSKaiowa', array('type' => 'status'), null, true);
+    $ws_response = Hook::exec('actionWSKaiowa', array('type' => 'status', 'document' => $Customer->document), null, true);
     $status = json_decode($ws_response['ps_kaiowa']);
     
     foreach ($status->datos->cuposaldo->creditos_vigentes as $credito) {

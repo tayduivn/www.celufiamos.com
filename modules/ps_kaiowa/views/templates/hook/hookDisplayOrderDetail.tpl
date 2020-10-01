@@ -34,7 +34,7 @@
 	    <td>{$kaiowa->cuotas_pendientes}</td>
 	  </tr>
 	</table>
-	<h3 class="col-md-12">Historial de cuotas</h3>
+	<h3>Historial de cuotas</h3>
 	{if $pagos}
 		<table class="table table-striped">
 	    <thead>
@@ -57,7 +57,7 @@
 	    </tbody>
 	  </table>
   {else}
-		<div class="alert alert-info" role="alert">
+		<div class="alert alert-info" style="margin-top: 20px" role="alert">
 		  No se han registrado pago de cuotas para esta orden
 		</div>
   {/if}

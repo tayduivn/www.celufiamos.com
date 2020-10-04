@@ -27,7 +27,7 @@ class ps_kaiowaStatusModuleFrontController extends ModuleFrontController
 	    $breadcrumb = parent::getBreadcrumbLinks();
 
 	    $breadcrumb['links'][] = [
-	        'title' => $this->getTranslator()->trans('Su Cuenta', [], 'Breadcrumb'),
+	        'title' => $this->getTranslator()->trans('Mi Cuenta', [], 'Breadcrumb'),
 	        'url' => $this->context->link->getPageLink('my-account')
 	    ];
 	    $breadcrumb['links'][] = [

@@ -314,7 +314,7 @@ class ps_storeStoreModuleFrontController extends ModuleFrontController
 			true
 		);
 		$cuotas = Configuration::get('BANK_KAIOWA_CUOTAS');
-		$cuota = ($saldo['ps_kaiowa']->cupo/($cuotas-1));
+		$cuota = $saldo['ps_kaiowa']->cuota;
   	$products = $this->getProductos($cuota);
   	$ordeForm = array(
 			'name' => $Customer->firstname

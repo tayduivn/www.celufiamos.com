@@ -44,7 +44,9 @@
             </div>
             {if $order.details.reorder_url}
               <div class="col-xs-3 text-xs-right">
+                {if false}
                 <a href="{$order.details.reorder_url}" class="button-primary">{l s='Reorder' d='Shop.Theme.Actions'}</a>
+                {/if}
               </div>
             {/if}
             <div class="clearfix"></div>
@@ -57,8 +59,8 @@
             <li><strong>{l s='Payment method' d='Shop.Theme.Checkout'}</strong> {$order.details.payment}</li>
 
             {if $order.details.invoice_url}
-              <li>
-                <a href="{$order.details.invoice_url}">
+              <li class="mt-1">
+                <a class="btn btn-primary" href="{$order.details.invoice_url}">
                   {l s='Download your invoice as a PDF file.' d='Shop.Theme.Customeraccount'}
                 </a>
               </li>
@@ -113,6 +115,9 @@
             </div>
           </div>
         {/foreach}
+      </div>
+      <div class="alert alert-info" style="margin-top: 20px" role="alert">
+        Recuerda que para que tu equipo pueda ser enviado y entregado debes pagar la primera cuota en los próximos 5 días, si no lo haces tu proceso de crédito queda anulado y debes volverlo a realizar.
       </div>
     </section>
   {/block}

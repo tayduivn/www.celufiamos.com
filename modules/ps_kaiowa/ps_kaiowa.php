@@ -208,7 +208,7 @@ class Ps_Kaiowa extends PaymentModule
             "pass" => Configuration::get('BANK_KAIOWA_PASSWORD'),
             "c_sucursal" =>  "1",
             "id_transaccion" => $cart_id,
-            "valor_financiar" =>  ($total * Configuration::get('BANK_KAIOWA_CUOTAS'))
+            "valor_financiar" =>  ($total * (Configuration::get('BANK_KAIOWA_CUOTAS')-1))
         );
         $urlRequest = str_replace(
             'JSON',
@@ -263,7 +263,7 @@ class Ps_Kaiowa extends PaymentModule
                 'wompi' => $this->_getWompiConfig(),
                 'redirect' => $this->context->link->getModuleLink('ps_kaiowa', 'balance'),
                 'cupo' => $credits,
-                'cuota' => ($credits->cupo/(Configuration::get('BANK_KAIOWA_CUOTAS')-1)),
+                'cuota' => $this->getCuota(),
                 'credits' => json_encode($credits),
                 'parsecredits' => json_encode($parseCredits),
                 'availability' => $this->_checkAvailability()
@@ -275,10 +275,15 @@ class Ps_Kaiowa extends PaymentModule
         }
     }
 
+    private function getCuota() {
+        $ws_response = Hook::exec('actionWSKaiowa', array('type' => 'balance'), null, true);
+        $balance = $ws_response['ps_kaiowa'];
+        return $balance->cuota;
+    }
+
     private function _checkAvailability() {
         $validate = array('authentication', 'cart');
         if(!empty(Configuration::get('BANK_KAIOWA_HOUR_INI')) && !empty(Configuration::get('BANK_KAIOWA_HOUR_FIN'))) {
-            echo $this->context->controller->php_self;
             if (in_array($this->context->controller->php_self, $validate)) {
                 if(date('H') >= Configuration::get('BANK_KAIOWA_HOUR_INI') || date('H') <= Configuration::get('BANK_KAIOWA_HOUR_FIN') ) {
                     return false;
@@ -319,7 +324,7 @@ class Ps_Kaiowa extends PaymentModule
         return array(
             'currency' => $this->context->currency->iso_code,
             'amountInCents' => $amountInCents,
-            'amountOriginal' => $obligacion->valor_cuota,
+            'amountOriginal' => !empty($obligacion->valor_cuota) ? $obligacion->valor_cuota : 0,
             'reference' => $reference,
             'publicKey' => Configuration::get('BANK_KAIOWA_WOMPI_PUB_KEY'),
             'redirectUrl' => $redirectURL
@@ -365,7 +370,7 @@ class Ps_Kaiowa extends PaymentModule
                         'a_login' => Configuration::get('BANK_KAIOWA_USER'),
                         'a_password' => Configuration::get('BANK_KAIOWA_PASSWORD'),
                         'a_id_marca' => Configuration::get('BANK_KAIOWA_URL_MARCA'),
-                        'a_documento' => $params['document'] ? $params['document'] : $this->context->customer->document                        
+                        'a_documento' => !empty($params['document']) ? $params['document'] : $this->context->customer->document                        
                     );
                     $opts['http']['method'] = 'post';
                     $opts['http']['content'] = json_encode($request);
@@ -374,6 +379,10 @@ class Ps_Kaiowa extends PaymentModule
                         return null;
                     }
                     $response = json_decode($response);
+                    $response->cuota = $response->valor_disponible_2/(Configuration::get('BANK_KAIOWA_CUOTAS')-1);
+                    if ($response->cuota < 69900) {
+                        $response->cuota = 0;
+                    }
                     return $response;
                 break;
                 case self::CONCILIATION:
@@ -569,7 +578,7 @@ class Ps_Kaiowa extends PaymentModule
             $category_id = $product->id_category_default;
             $category = new Category($category_id);
             $cuotas = Configuration::get('BANK_KAIOWA_CUOTAS');
-            $price = $product->price_amount ? $product->price_amount : $product->price; 
+            $price = !empty($product->price_amount) ? $product->price_amount : $product->price; 
             if (in_array($param['type'], array('before_price', 'unit_price', 'weight', 'weight_cart'))) {
                 $this->smarty->assign(array(
                     'category_name' => Tools::displayPrice(current(str_replace('.','',$category->name))),
@@ -583,7 +592,7 @@ class Ps_Kaiowa extends PaymentModule
 
             if($param['type'] == 'after_price') {
                 $saldo = $this->hookActionWSKaiowa(array('type' => self::BALANCE));
-                $cuota = ($saldo->cupo/($cuotas-1));
+                $cuota = $this->getCuota();
                 if ($price > $cuota) {
                     $this->smarty->assign(array(
                         'cuota' => $cuota,

@@ -4,6 +4,13 @@
 	      	$('.add').parent().addClass('cart-disabled');
 	      	$('.add').find('input, button').attr('disabled',true);
 	    }
+	    console.log('veme');
+	    console.log(prestashop.modules.ps_kaiowa.cuota+' ' +$('.current-price span').attr('content'));
+	    if ((prestashop.modules.ps_kaiowa.cuota < $('.current-price span').attr('content'))) {
+	    	console.log('entre');
+	    	$('.add').parent().addClass('cart-disabled');
+	      $('.add').find('input, button').attr('disabled',true);
+	    }
 
 	    if (!prestashop.modules.ps_kaiowa.availability) {
 	    	$('#PlataformDisabled').modal({keyboard: false, backdrop: 'static'});

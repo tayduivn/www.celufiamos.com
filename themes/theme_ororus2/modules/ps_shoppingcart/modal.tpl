@@ -62,6 +62,7 @@
               {if $cart.subtotals.tax}
               	<p><strong>{$cart.subtotals.tax.label}</strong>&nbsp;{$cart.subtotals.tax.value}</p>
               {/if}
+              {if }
               <p><strong>{l s='Total:' d='Shop.Theme.Checkout'}</strong>&nbsp;{$cart.totals.total.value} <!--{$cart.labels.tax_short}--></p>
               <div>{l s='Solo puedes hacer una compra por proceso debes eliminar el producto seleccionado para cambiar a otro producto de tu preferencia' d='Shop.Theme.Actions'}</div>
               <div class="cart-content-btn">

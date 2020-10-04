@@ -23,11 +23,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 
+{if $customer.is_logged}
 <div class="product-note">
 <div class="alert alert-info my-5" role="alert" style="margin-top: 3rem; margin-bottom: 3rem; text-align: center">
 {l s='Solo puedes hacer una compra por proceso debes eliminar el producto seleccionado para cambiar a otro producto de tu preferencia' d='Shop.Theme.Actions'}
 </div>
 </div>
+{/if}
 <div class="product-add-to-cart">
   {if !$configuration.is_catalog}
     <!--<span class="control-label">{l s='Quantity' d='Shop.Theme.Catalog'}</span>-->

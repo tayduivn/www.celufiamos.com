@@ -47,8 +47,8 @@ $(document).ready(function () {
         }
 
         $.post(refreshURL, requestData).then(function (resp) {
-          console.log(prestashop);
-          if(prestashop.cart != undefined && prestashop.cart.products_count >= 1) {
+          if(prestashop.cart != undefined && prestashop.cart.products_count >= 1
+            || (prestashop.modules.ps_kaiowa.cuota < $('.current-price span').attr('content'))) {
             $('.add').parent().addClass('cart-disabled');
             $('.add').find('input, button').attr('disabled',true);
           } else {

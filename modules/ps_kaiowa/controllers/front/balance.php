@@ -13,10 +13,8 @@ class ps_kaiowaBalanceModuleFrontController extends ModuleFrontController
 		
 		$ws_response = Hook::exec('actionWSKaiowa', array('type' => 'balance'), null, true);
 		$balance = $ws_response['ps_kaiowa'];
-
-		$cuota = $balance->cupo/(Configuration::get('BANK_KAIOWA_CUOTAS')-1);
+		$cuota = $balance->cuota;
 		$cats = Category::getAllCategoriesName();
-		//echo "<pre>"; print_r($cats); echo "</pre>";
 		foreach ($cats as $category) {
 			if(is_numeric($category['name'])) {
 				$price = (int)str_replace('.','',$category['name']);
@@ -26,11 +24,11 @@ class ps_kaiowaBalanceModuleFrontController extends ModuleFrontController
 				}
 			}
 		}
-
 		$this->context->smarty->assign(array(
 			'balance' => $balance,
 			'has_errors' => (isset($balance->err_code) && $balance->err_code!=0),
 			'cuota' => Tools::displayPrice($cuota),
+			'unparsecuota' => $cuota,
 			'categories' => $allowCategory 
 		));
 		$this->setTemplate('module:'.$this->module->name.'/views/templates/front/balance.tpl');

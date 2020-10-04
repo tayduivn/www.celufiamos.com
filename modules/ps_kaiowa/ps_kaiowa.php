@@ -278,7 +278,6 @@ class Ps_Kaiowa extends PaymentModule
     private function _checkAvailability() {
         $validate = array('authentication', 'cart');
         if(!empty(Configuration::get('BANK_KAIOWA_HOUR_INI')) && !empty(Configuration::get('BANK_KAIOWA_HOUR_FIN'))) {
-            echo $this->context->controller->php_self;
             if (in_array($this->context->controller->php_self, $validate)) {
                 if(date('H') >= Configuration::get('BANK_KAIOWA_HOUR_INI') || date('H') <= Configuration::get('BANK_KAIOWA_HOUR_FIN') ) {
                     return false;

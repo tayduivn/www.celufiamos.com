@@ -276,23 +276,29 @@ class Ps_Kaiowa extends PaymentModule
     }
 
     private function _checkAvailability() {
-
+        $validate = array('authentication', 'cart');
         if(!empty(Configuration::get('BANK_KAIOWA_HOUR_INI')) && !empty(Configuration::get('BANK_KAIOWA_HOUR_FIN'))) {
-            if(date('H') >= Configuration::get('BANK_KAIOWA_HOUR_INI') || date('H') <= Configuration::get('BANK_KAIOWA_HOUR_FIN') ) {
-                return false;
+            echo $this->context->controller->php_self;
+            if (in_array($this->context->controller->php_self, $validate)) {
+                if(date('H') >= Configuration::get('BANK_KAIOWA_HOUR_INI') || date('H') <= Configuration::get('BANK_KAIOWA_HOUR_FIN') ) {
+                    return false;
+                }
             }
         }
-
-        $request = array(
-            'a_schemacia' => Configuration::get('BANK_KAIOWA_URL_SCHEMACIA'),
-            'a_login' => Configuration::get('BANK_KAIOWA_USER'),
-            'a_password' => Configuration::get('BANK_KAIOWA_PASSWORD'),
-            'a_cedula_deudor' => '123456789'                        
-        );
-        $opts['http']['method'] = 'post';
-        $opts['http']['content'] = json_encode($request);
-        $response = $this->file_get_contents_curl_status(Configuration::get('BANK_KAIOWA_URL_STATUS'),2,$opts);     
-        return $response;        
+        if (in_array($this->context->controller->php_self, $validate)) {
+            $request = array(
+                'a_schemacia' => Configuration::get('BANK_KAIOWA_URL_SCHEMACIA'),
+                'a_login' => Configuration::get('BANK_KAIOWA_USER'),
+                'a_password' => Configuration::get('BANK_KAIOWA_PASSWORD'),
+                'a_cedula_deudor' => '123456789'
+            );
+            $opts['http']['method'] = 'post';
+            $opts['http']['content'] = json_encode($request);
+            $response = $this->file_get_contents_curl_status(Configuration::get('BANK_KAIOWA_URL_STATUS'),0,$opts);
+            return $response;
+        } else {
+            return true;
+        }
     }
 
 

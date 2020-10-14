@@ -214,7 +214,7 @@ class Contactform extends Module implements WidgetInterface
                     $ct->token = Tools::passwdGen(12);
                     $ct->add();
                 }
-
+try {
                 if ($ct->id) {
 
                     $lastMessage = CustomerMessage::getLastMessageForCustomerThread($ct->id);
@@ -232,14 +232,17 @@ class Contactform extends Module implements WidgetInterface
                         $cm->ip_address = (int)ip2long(Tools::getRemoteAddr());
                         $cm->user_agent = $_SERVER['HTTP_USER_AGENT'];
                         if (!$cm->add()) {
-                            $this->context->controller->errors[] = $this->l('An error occurred while sending the message.');
+                            $this->context->controller->errors[] = $this->l('An error occurred while sending the message.'). 1;
                         }
                     } else {
                         $mailAlreadySend = true;
                     }
                 } else {
-                    $this->context->controller->errors[] = $this->l('An error occurred while sending the message.');
+                    $this->context->controller->errors[] = $this->l('An error occurred while sending the message.'). 2;
                 }
+} catch (Exception $e) {
+    echo '<pre>'; print_r($e); echo "</pre>";
+}                
             }
 
             if (!count($this->context->controller->errors) && empty($mailAlreadySend)) {

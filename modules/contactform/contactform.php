@@ -322,7 +322,7 @@ class Contactform extends Module implements WidgetInterface
             }
 
             if (!count($this->context->controller->errors)) {
-                $this->context->controller->success[] = $this->l('Your message has been successfully sent to our team.');
+                $this->context->controller->success[] = $this->l('Tu mensaje se envio correctamente.');
             }
         }
     }

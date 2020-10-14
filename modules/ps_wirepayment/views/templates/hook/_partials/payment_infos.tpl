@@ -30,7 +30,7 @@
     <dt>{l s='Name of account owner' d='Modules.Wirepayment.Shop'}</dt>
     <dd>{$bankwireOwner}</dd>
     <dt>{l s='Convenio' d='Modules.Wirepayment.Shop'}</dt>
-    <dd>{$bankwireDetails nofilter}</dd>
+    <dd>86553</dd>
     <dt>{l s='Bank name' d='Modules.Wirepayment.Shop'}</dt>
     <dd>{$bankwireAddress nofilter}</dd>
 </dl>

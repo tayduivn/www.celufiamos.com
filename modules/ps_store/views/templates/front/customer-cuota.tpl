@@ -7,6 +7,7 @@
 	</div>
 
 	<hr class="col-md-12">
+	{if $ordeForm.cuota > 0}
 	<div class="row">
 		<div class="col-md-10">
 			<div class="form-group">
@@ -19,4 +20,11 @@
 	</div>
 	<hr class="col-md-12">
 	{include file="modules/ps_store/views/templates/front/product-list.tpl" products=$ordeForm.products}
+	{else}
+	<div class="row">
+	  <div class="alert alert-info text-center" style="margin-top: 20px" role="alert">
+			El usuario no tiene cuota disponible para realizar el proceso 
+		</div>  
+	</div>
+	{/if}
 {/if}

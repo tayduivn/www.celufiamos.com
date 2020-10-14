@@ -23,7 +23,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<p>{l s='Debes indicar el número de tu cédula y el número de convenio 86553 a nombre de CELUFIAMOS, esta forma de pago solo te permite hacer el abono exacto al valor de tu cuota adeudada.' d='Modules.Wirepayment.Shop'}</p>
 <dl>
     <dt>{l s='Amount' d='Modules.Wirepayment.Shop'}</dt>
     <dd id="total-consig">{$total}</dd>

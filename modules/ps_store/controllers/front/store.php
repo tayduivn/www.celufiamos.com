@@ -365,6 +365,7 @@ class ps_storeStoreModuleFrontController extends ModuleFrontController
           $order_by_prefix = $order_by[0];
           $order_by = $order_by[1];
       }
+      $only_active = true;
       $sql = 'SELECT p.*, product_shop.*, pl.* , m.`name` AS manufacturer_name, s.`name` AS supplier_name
               FROM `' . _DB_PREFIX_ . 'product` p
               ' . Shop::addSqlAssociation('product', 'p') . '

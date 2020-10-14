@@ -152,6 +152,9 @@
           </tr>
         </tfoot>
       </table>
+      <div class="alert alert-info" style="margin-top: 20px" role="alert">
+        El precio corresponde al valor de una de las seis cuotas que deben ser pagadas mensualmente.
+      </div>
     </div>
 
     <div class="order-items hidden-md-up box">

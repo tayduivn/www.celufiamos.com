@@ -88,12 +88,10 @@
 			  $.each(credits.datos.cuposaldo.creditos_vigentes, function( index, value ) {
 			  	modal.find('#d_estado_cartera').html(credits.datos.cuposaldo.d_estado_cartera);
 			  		if(value.id_obligacion == id) {
-			  			$.each(value, function( index2, value2 ) {
-			  				modal.find('#'+index2).html(value2);
-			  			});
+			  			modal.find('.modal-body').html(value.historial);
 			  		}
 			  });
-			  modal.find('.modal-title').text('Detalles #' + id)
+			  modal.find('.modal-title').text('Ref. #' + id)
 			})
 
 			$('#infoPayment').on('show.bs.modal', function (event) {

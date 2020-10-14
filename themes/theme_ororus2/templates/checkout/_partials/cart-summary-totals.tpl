@@ -29,6 +29,7 @@
       <span class="label">{$cart.totals.total.label} {if false}{$cart.labels.tax_short}{/if}</span>
       <span class="value">{$cart.totals.total.value}</span>
     </div>
+
   {/block}
 
   {block name='cart_summary_tax'}
@@ -37,5 +38,8 @@
       <span class="value sub">{$cart.subtotals.tax.value}</span>
     </div>
   {/block}
+    <div class="alert alert-info text-center" style="margin-top: 20px" role="alert">
+      Recuerda que para que tu equipo pueda ser enviado y entregado debes pagar la primera cuota en los próximos 5 días, si no lo haces tu proceso de compra queda anulado y debes volverlo a realizar. 
+    </div> 
 
 </div>

@@ -59,7 +59,8 @@
 	  </div>
 	  <div class="col-md-6">	  
 		  <div class="form-group">
-		    <input type="text" class="form-control" id="f_exped2" name="f_exped2" placeholder="Fecha de expedición" required>
+		    <input type="text" class="form-control" id="f_exped2" name="f_exped2" placeholder="Fecha de expedición de la cédula
+" required>
 		  </div>
 	  </div>
 	  <div class="col-md-12">	  

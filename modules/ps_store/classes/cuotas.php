@@ -39,7 +39,6 @@ class cuotasCore extends ObjectModel
 			return null;
 
 		$sql = 'SELECT id_order FROM '._DB_PREFIX_.'orders as a INNER JOIN '._DB_PREFIX_.'cart b on a.id_cart = b.id_cart where b.id_obligacion = "'.$id_obligacion.'"';
-		echo $sql;
 		return Db::getInstance()->getValue($sql);
 	}
 

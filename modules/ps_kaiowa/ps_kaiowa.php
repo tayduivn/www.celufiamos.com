@@ -144,7 +144,6 @@ class Ps_Kaiowa extends PaymentModule
             || !$this->registerHook('displayExpressCheckout')
             || !$this->registerHook('displayFooter')
             || !$this->registerHook('displayOrderDetail')
-            || !$this->registerHook('displayOrderDetail')
             || !$this->registerHook('displayCustomerAccountForm')
         ) {
             return false;
@@ -172,7 +171,11 @@ class Ps_Kaiowa extends PaymentModule
                 break;
             }
         }
-        $payments = cuotasCore::getPaymentsByIdOrder($params['order']->id);
+        return $this->getHistorial($data, $params['order']->id);
+    }
+
+    private function getHistorial($data, $id_order) {
+        $payments = cuotasCore::getPaymentsByIdOrder($id_order);
         $this->smarty->assign(array(
             'kaiowa' => $data,
             'pagos' => $payments
@@ -383,6 +386,7 @@ class Ps_Kaiowa extends PaymentModule
                     if ($response->cuota < 69900) {
                         $response->cuota = 0;
                     }
+                    //$response->cuota = 150000;
                     return $response;
                 break;
                 case self::CONCILIATION:
@@ -417,8 +421,17 @@ class Ps_Kaiowa extends PaymentModule
                     if($response == false) {
                         return null;
                     }
-                    $response = $response;
-                    return $response;
+                    $response = str_replace('5 Meses Pago Mensual Sin interes', '6 Meses Pago Mensual Sin interes',$response);
+                    $response = json_decode($response, true);
+                    require_once(dirname(__FILE__).'/../ps_store/classes/cuotas.php');
+                    foreach($response['datos']['cuposaldo']['creditos_vigentes'] as &$credito) {
+                        $params = array();
+                        $orderId = cuotasCore::getOrderIdByIdObligacion($credito['id_obligacion']);
+                        if($orderId) {
+                            $credito['historial'] = $this->getHistorial(json_decode(json_encode($credito)), $orderId);                            
+                        }
+                    }
+                    return json_encode($response);
                 break;
 
             } 

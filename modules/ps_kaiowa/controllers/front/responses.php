@@ -48,8 +48,28 @@ class ps_kaiowaResponsesModuleFrontController extends ModuleFrontController
 				$this->_log('cart');
 				$this->_validateCart();
 			break;
+			case 'cronjob':
+				$this->_cronjob();
+			break;
 		}
 		die('end');
+	}
+
+	private function _cronjob() {
+		require_once(dirname(__FILE__).'/../../ps_kaiowa.php');
+		$kaiowa = new Ps_Kaiowa(); 
+		$date = time() - 1800; 
+		$sql = '
+      SELECT `id_customer`
+      FROM `' . _DB_PREFIX_ . 'customer`
+      WHERE 1 ' . Shop::addSqlRestriction(Shop::SHARE_CUSTOMER) .
+      ' AND `active` = 0 
+      AND  date_add < "'.date('Y-m-d H:i:s', $date).'"
+      ORDER BY `id_customer` ASC';
+		$customers = Db::getInstance()->executeS($sql);
+		foreach($customers as &$customer) {
+			$kaiowa->disableCustomer($customer['id_customer']);
+		}
 	}
 
 	private function _log($type) {

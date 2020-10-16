@@ -553,7 +553,6 @@ class Ps_Kaiowa extends PaymentModule
                 $this->base64url_encode(utf8_encode(Tools::jsonEncode($request))),
                 Configuration::get('BANK_KAIOWA_URL_CUPO')
             );
-            mail('sebasca5gz@gmail.com','REQUEST USER KAIOWA','--- '.$urlRequest.' -- '.print_r($request,true));
 
             if (empty($params['from-store'])) {
                 setcookie('USER_CREATE_TRANSACTION',$customer->id.'|'.$this->context->cart->id, time()+3600);
@@ -726,6 +725,46 @@ class Ps_Kaiowa extends PaymentModule
         $this->_checkUserhasCupo();
     }
 
+    public function disableCustomer($customer_id) {
+        if (!empty($customer_id)) {
+            $customer = new Customer($customer_id);
+            require_once('classes/kaiowaUsers.php');
+            $kaiowaUsers = new kaiowaUsersCore;
+            $kaiowaUsers->firstname = $customer->firstname;
+            $kaiowaUsers->firstname2 = $customer->firstname2;
+            $kaiowaUsers->lastname = $customer->lastname;
+            $kaiowaUsers->lastname2 = $customer->lastname2;
+            $kaiowaUsers->email = $customer->email;
+            $kaiowaUsers->mobile = $customer->mobile;
+            $kaiowaUsers->add();
+            Mail::Send(
+                (int) Context::getContext()->language->id,
+                'customer_deactivate',
+                Context::getContext()->getTranslator()->trans(
+                    'Tu cuenta no ha sido aprobada',
+                    array(),
+                    'Emails.Subject',
+                    Context::getContext()->language->locale
+                ),
+                array(
+                    '{firstname}' => $customer->firstname,
+                    '{lastname}' => $customer->lastname,
+                    '{email}' => $customer->email,
+                ),
+                $customer->email,
+                $customer->firstname . ' ' . $customer->lastname,
+                null,
+                null,
+                null,
+                null,
+                _PS_MAIL_DIR_,
+                false,
+                (int) Context::getContext()->shop->id
+            );
+            $customer->delete();
+        }
+    }
+
     private function _checkUserhasCupo() {
         if(isset($_COOKIE['USER_CREATE_TRANSACTION'])) {
             $transactionIds = explode('|',$_COOKIE['USER_CREATE_TRANSACTION']);
@@ -736,43 +775,9 @@ class Ps_Kaiowa extends PaymentModule
                     AND id_cart="'.$cart_id.'"
                     AND cupo = 0');
             if($activate) {
-                $customer = new Customer($customer_id);
-                require_once('classes/kaiowaUsers.php');
-                $kaiowaUsers = new kaiowaUsersCore;
-                $kaiowaUsers->firstname = $customer->firstname;
-                $kaiowaUsers->firstname2 = $customer->firstname2;
-                $kaiowaUsers->lastname = $customer->lastname;
-                $kaiowaUsers->lastname2 = $customer->lastname2;
-                $kaiowaUsers->email = $customer->email;
-                $kaiowaUsers->mobile = $customer->mobile;
-                $kaiowaUsers->add();
-                Mail::Send(
-                    (int) Context::getContext()->language->id,
-                    'customer_deactivate',
-                    Context::getContext()->getTranslator()->trans(
-                        'Tu cuenta no ha sido aprobada',
-                        array(),
-                        'Emails.Subject',
-                        Context::getContext()->language->locale
-                    ),
-                    array(
-                        '{firstname}' => $customer->firstname,
-                        '{lastname}' => $customer->lastname,
-                        '{email}' => $customer->email,
-                    ),
-                    $customer->email,
-                    $customer->firstname . ' ' . $customer->lastname,
-                    null,
-                    null,
-                    null,
-                    null,
-                    _PS_MAIL_DIR_,
-                    false,
-                    (int) Context::getContext()->shop->id
-                );
+                $this->disableCustomer($customer_id);
                 setcookie('USER_CREATE_TRANSACTION', time() - 3600);
                 unset($_COOKIE['USER_CREATE_TRANSACTION']);
-                $customer->delete();
                 $this->context->controller->addJS($this->_path.'ps_kaiowa_modal.js');
             }
         }

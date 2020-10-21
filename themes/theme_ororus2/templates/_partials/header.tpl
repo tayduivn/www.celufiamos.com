@@ -42,7 +42,9 @@
     </div>
   </div>
 	<div class="header-bottom">
-		<div class="alert alert-danger text-center" style="margin-bottom: 55px;" role="alert"><h2>Estamos en etapa de pruebas, lo que se haga durante este período no tendrá validez.</h2></div>	
+		{if false}
+		<div class="alert alert-danger text-center" style="margin-bottom: 55px;" role="alert"><h2>Estamos en etapa de pruebas, lo que se haga durante este período no tendrá validez.</h2></div>
+		{/if}
 		<div class="container">
 			{hook h='displaymegamenu'}
 		</div>

@@ -55,6 +55,8 @@ class AdminOrdersController extends AdminOrdersControllerCore
 		a.id_order AS id_pdf,
 		CONCAT(LEFT(c.`firstname`, 1), \'. \', c.`lastname`) AS `customer`,
 		osl.`name` AS `osname`,
+        ocl.`name` AS `current_cuote`,
+        (select store from ' . _DB_PREFIX_ . 'celufiamos_store where id_celufiamos_store = a.id_celufiamos_store) as id_celufiamos_store,
 		os.`color`,
 		IF((SELECT so.id_order FROM `' . _DB_PREFIX_ . 'orders` so WHERE so.id_customer = a.id_customer AND so.id_order < a.id_order LIMIT 1) > 0, 0, 1) as new,
 		country_lang.name as cname,
@@ -66,6 +68,7 @@ class AdminOrdersController extends AdminOrdersControllerCore
 		INNER JOIN `' . _DB_PREFIX_ . 'country` country ON address.id_country = country.id_country
 		INNER JOIN `' . _DB_PREFIX_ . 'country_lang` country_lang ON (country.`id_country` = country_lang.`id_country` AND country_lang.`id_lang` = ' . (int) $this->context->language->id . ')
 		LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON (os.`id_order_state` = a.`current_state`)
+        LEFT JOIN `' . _DB_PREFIX_ . 'order_state_lang` ocl ON (ocl.`id_order_state` = a.`current_cuote` AND ocl.`id_lang` = ' . (int) $this->context->language->id . ') 
 		LEFT JOIN `' . _DB_PREFIX_ . 'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = ' . (int) $this->context->language->id . ')';
         $this->_orderBy = 'id_order';
         $this->_orderWay = 'DESC';
@@ -96,6 +99,10 @@ class AdminOrdersController extends AdminOrdersControllerCore
                 'title' => $this->trans('Customer', array(), 'Admin.Global'),
                 'havingFilter' => true,
             ),
+            'document' => array(
+                'title' => $this->trans('Documento', array(), 'Admin.Global'),
+                'havingFilter' => true,
+            ),
         );
 
         if (Configuration::get('PS_B2B_ENABLE')) {
@@ -107,6 +114,12 @@ class AdminOrdersController extends AdminOrdersControllerCore
             ));
         }
         $stores = storeCore::getFilterStores();
+        foreach ($this->statuses_array as $k => $value) {
+            if($k >= 21 && $k <= 27) {
+              $cuotes_array[$k] = $value;  
+            }
+        }
+
         $this->fields_list = array_merge($this->fields_list, array(
             'total_paid_tax_incl' => array(
                 'title' => $this->trans('Total', array(), 'Admin.Global'),
@@ -119,6 +132,7 @@ class AdminOrdersController extends AdminOrdersControllerCore
             'payment' => array(
                 'title' => $this->trans('Payment', array(), 'Admin.Global'),
             ),
+
             'osname' => array(
                 'title' => $this->trans('Status', array(), 'Admin.Global'),
                 'type' => 'select',
@@ -128,6 +142,15 @@ class AdminOrdersController extends AdminOrdersControllerCore
                 'filter_type' => 'int',
                 'order_key' => 'osname',
             ),
+
+            'current_cuote' => array(
+                'title' => $this->trans('Cuota actual', array(), 'Admin.Global'),
+                'type' => 'select',
+                'list' => $cuotes_array,
+                'filter_key' => 'a!current_cuote',
+                'filter_type' => 'int',
+                'order_key' => 'current_cuote',
+            ),            
             'date_add' => array(
                 'title' => $this->trans('Date', array(), 'Admin.Global'),
                 'align' => 'text-right',

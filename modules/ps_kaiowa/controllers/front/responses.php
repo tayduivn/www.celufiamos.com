@@ -44,6 +44,10 @@ class ps_kaiowaResponsesModuleFrontController extends ModuleFrontController
 				$this->_log('payment');
 				$this->_processPayment();
 			break;
+			case 'paymentCuote':
+				$this->_log('paymentCuote');
+				$this->_processPaymentCuote();
+			break;			
 			case 'cart':
 				$this->_log('cart');
 				$this->_validateCart();
@@ -108,6 +112,29 @@ class ps_kaiowaResponsesModuleFrontController extends ModuleFrontController
 		}
 	}
 
+	private function _processPaymentCuote() {
+		print_r($_REQUEST);
+		$transaction = $_REQUEST['form']['transaction'];
+		$reference = explode('|',base64_decode($transaction['reference']));
+		$cart_id = $reference[0];
+		$customer_id = $reference[1];
+		$date = $reference[2];
+		if($transaction['status'] == 'APPROVED') {
+			require_once dirname(__FILE__). '/../../../ps_store/classes/cuotas.php';
+			$date = date('Y-m-d H:i:s');
+			$id = Order::getIdByCartId($cart_id);
+			$Order = new Order($id);
+			$cuotas = new cuotasCore();
+			$cuotas->value = $Order->getTotalProductsWithoutTaxes();
+			$cuotas->quotas = 1;
+			$cuotas->id_customer = $Order->id_customer;
+			$cuotas->payment_method = 'Pago Online';
+			$cuotas->id_order = $id;
+			$cuotas->date = $date;
+			$cuotas->add();
+		}
+	}
+
 	private function _processPayment() {
 		$transaction = $_REQUEST['transaction'];
 		$reference = explode('|',base64_decode($transaction['reference']));
@@ -120,7 +147,7 @@ class ps_kaiowaResponsesModuleFrontController extends ModuleFrontController
 			$currency = Context::getContext()->currency;
 			$mailVars = array();
 			$total = (float)$cart->getOrderTotal(true, Cart::BOTH);
-			$state = $transaction['status'] == 'APPROVED' ? 2 : 8;
+			$state = $transaction['status'] == 'APPROVED' ? 21 : 8;
 			$this->module->validateOrder(
 				$cart->id,
 				$state,
@@ -132,7 +159,23 @@ class ps_kaiowaResponsesModuleFrontController extends ModuleFrontController
 				false,
 				$customer->secure_key
 			);
-			die('');
+			if ($state == 21) {
+				require_once dirname(__FILE__). '/../../../ps_store/classes/cuotas.php';
+				$date = date('Y-m-d H:i:s');
+				$id = Order::getIdByCartId($cart_id);
+				$Order = new Order($id);
+				$cuotas = new cuotasCore();
+				$cuotas->value = $Order->getTotalProductsWithoutTaxes();
+				$cuotas->quotas = 1;
+				$cuotas->id_customer = $Order->id_customer;
+				$cuotas->payment_method = 'Pago en tienda';
+				$cuotas->id_order = $id;
+				$cuotas->date = $date;
+				$cuotas->noSetStatusOrder = true;
+				$cuotas->add();
+				$cuotas->updateOrderCurrentState($state, $id);
+			}
+			die('end payment');
 		}
 	}
 

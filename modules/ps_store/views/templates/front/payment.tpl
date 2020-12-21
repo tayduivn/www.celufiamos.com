@@ -54,8 +54,9 @@
 	<div class="row" style="margin-top: 30px; text-align: right">
 		<div class="col-md-12">
 			<button type="button" id="print" data-reference="{$id}" onclick="window.print()" class="btn btn-primary hidden">IMPRIMIR</button>
+			<a href="/tienda" id="back" class="btn btn-primary">VOLVER</a>
 			<button type="button" data-reference="{$id}" id="cancel-payment" class="btn btn-primary">CANCELAR ORDEN</button>
-			<button type="button" data-reference="{$id}" id="open-payment" class="btn btn-success" data-toggle="modal" data-target="#paymentSave">REGISTRAR PAGO</button>
+			<button type="button" data-reference="{$id}" id="open-payment" class="btn btn-success" data-toggle="modal" data-target="#paymentSave">REGISTRAR PRIMERA CUOTA</button>
 		</div>
 	</div>
 </div>

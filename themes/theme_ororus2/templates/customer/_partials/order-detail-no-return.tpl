@@ -28,8 +28,8 @@
       <thead class="thead-default">
         <tr>
           <th>{l s='Product' d='Shop.Theme.Catalog'}</th>
-          <th>{l s='Quantity' d='Shop.Theme.Catalog'}</th>
-          <th>{l s='Unit price' d='Shop.Theme.Catalog'}</th>
+          <th>{l s='Nro. Cuotas' d='Shop.Theme.Catalog'}</th>
+          <th>{l s='Valor cuota' d='Shop.Theme.Catalog'}</th>
           <th>{l s='Total price' d='Shop.Theme.Catalog'}</th>
         </tr>
       </thead>
@@ -92,11 +92,15 @@
                 {$customization.quantity}
               {/foreach}
             {else}
-              {$product.quantity}
+              {Configuration::get('BANK_KAIOWA_CUOTAS')}
             {/if}
           </td>
-          <td class="text-xs-right">{$product.price}</td>
-          <td class="text-xs-right">{$product.total}</td>
+          <td class="text-xs-right">
+          <script>
+            var paymentCuote = {$product.product_price}00; 
+          </script>
+          {$product.price}</td>
+          <td class="text-xs-right">{$product.product_price * Configuration::get('BANK_KAIOWA_CUOTAS')}</td>
         </tr>
       {/foreach}
       <tfoot>
@@ -104,19 +108,16 @@
           {if $line.value}
             <tr class="text-xs-right line-{$line.type}">
               <td colspan="3">{$line.label}</td>
-              <td>{$line.value}</td>
+              <td>{if $line.type == 'products'}{Tools::displayPrice($order.totals.total.amount * Configuration::get('BANK_KAIOWA_CUOTAS'))}{else}{$line.value}{/if}</td>
             </tr>
           {/if}
         {/foreach}
         <tr class="text-xs-right line-{$order.totals.total.type}">
           <td colspan="3">{$order.totals.total.label}</td>
-          <td>{$order.totals.total.value}</td>
+          <td>{Tools::displayPrice($order.totals.total.amount * Configuration::get('BANK_KAIOWA_CUOTAS'))}</td>
         </tr>
       </tfoot>
     </table>
-    <div class="alert alert-info" style="margin-top: 20px" role="alert">
-      El precio corresponde al valor de una de las seis cuotas que deben ser pagadas mensualmente.
-    </div>
   </div>
 
   <div class="order-items hidden-md-up box">

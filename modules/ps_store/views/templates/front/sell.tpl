@@ -16,5 +16,6 @@
 
 <!-- MODAL -->
 {include file="modules/ps_store/views/templates/front/new-customer-modal.tpl" }
+{include file="modules/ps_store/views/templates/front/modal-combination.tpl" }
 <!-- fin modal -->
 {include file="modules/ps_store/views/templates/front/customer-cuota.tpl" ordeForm=$ordeForm}

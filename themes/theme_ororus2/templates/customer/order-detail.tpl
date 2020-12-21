@@ -54,19 +54,68 @@
       </div>
 
       <div class="box">
-          <ul>
+          <ul class="row">
             <li><strong>{l s='Carrier' d='Shop.Theme.Checkout'}</strong> {$order.carrier.name}</li>
             <li><strong>{l s='Payment method' d='Shop.Theme.Checkout'}</strong> {$order.details.payment}</li>
 
             {if $order.details.invoice_url}
-              <li class="mt-1">
+              <li class="mt-1 col-md-6">
                 <a class="btn btn-primary" href="{$order.details.invoice_url}">
                   {l s='Download your invoice as a PDF file.' d='Shop.Theme.Customeraccount'}
                 </a>
               </li>
             {/if}
 
-            {if $order.details.recyclable}
+            {if $showpayment}
+              <li class="mt-1 col-md-6" style="text-align: right">
+                <button data-toggle="modal" data-target="#infoPayment" id="{$credit->id_obligacion}" type="button" class="btn btn-success view-credit">{l s='PAGAR CUOTAS' d='Modules.ps_kaiowa.myaccount'}</button>
+              </li>
+<!-- Modal -->
+<div class="modal fade" id="infoPayment" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Pagos</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row mx-1">
+          <div class="form-group">
+            <label for="paymentQuotes">{l s='Seleccione el número de cuotas' d='Modules.ps_kaiowa.myaccount'}</label>
+            <select class="form-control" id="paymentQuotes">
+              <option value=1>1 Cuota</option>
+            </select>
+          </div>
+          <div id="consignation" class="mb-2">
+            <h3 class="text-center">{l s='También puedes pagar una cuota en los corresponsales bancarios de Bancolombia.' d='Modules.ps_kaiowa.myaccount'}</h3>
+            <p style="margin-top: 20px">
+              Indica el número de tu cédula, el número de convenio 86553 a nombre de Celufiamos.
+              El sistema te dejará hacer el valor exacto de una cuota, al segundo día hábil después de haber completado el proceso en Celufiamos.
+            </p>
+            {if false}
+            {include file='module:ps_kaiowa/views/templates/hook/_partials/payment_infos.tpl'}
+            {/if}
+          </div>
+          <form class="text-right">
+
+          <div class="alert alert-info text-center" style="margin-top: 20px" role="alert">
+              Debes indicar el número de tu cédula y el número de convenio 86553 a nombre de CELUFIAMOS, esta forma de pago solo te permite hacer el abono exacto al valor de tu cuota adeudada.
+          </div>
+            <button type="button" class="btn btn-success payment-wompi">{l s='Pagar con wompi' d='Modules.ps_kaiowa.myaccount'}</button>
+        </form>       
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">{l s='Cerrar' d='Shop.Theme.Customeraccount'}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+            {/if}  
+            {if $order.details.recyclable && false == true}
               <li>
                 {l s='You have given permission to receive your order in recycled packaging.' d='Shop.Theme.Customeraccount'}
               </li>
@@ -94,7 +143,7 @@
         <tbody>
           {foreach from=$order.history item=state}
             <tr>
-              <td>{$state.history_date}</td>
+              <td>{$state.date_add}</td>
               <td>
                 <span class="label label-pill {$state.contrast}" style="background-color:{$state.color}">
                   {$state.ostate_name}

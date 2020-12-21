@@ -4,10 +4,8 @@
 	      	$('.add').parent().addClass('cart-disabled');
 	      	$('.add').find('input, button').attr('disabled',true);
 	    }
-	    console.log('veme');
-	    console.log(prestashop.modules.ps_kaiowa.cuota+' ' +$('.current-price span').attr('content'));
+
 	    if ((prestashop.modules.ps_kaiowa.cuota < $('.current-price span').attr('content'))) {
-	    	console.log('entre');
 	    	$('.add').parent().addClass('cart-disabled');
 	      $('.add').find('input, button').attr('disabled',true);
 	    }
@@ -34,13 +32,13 @@
 							checkout.open(function(result) {
 							  $.ajax({
 							  	type: "POST",
-							  	url: result.transaction.redirectUrl,
+							  	url: window.location.origin + '/responses?type=payment',
 							  	data: result,
 			  					success: function(data) {
-			  							window.location.replace(prestashop.modules.ps_kaiowa.redirect);
+			  						window.location.replace(prestashop.modules.ps_kaiowa.redirect);
 			  					},
 			  					fail: function(data) {
-			  							window.location.replace(prestashop.modules.ps_kaiowa.redirect);
+			  						window.location.replace(prestashop.modules.ps_kaiowa.redirect);
 			  					},
 							  });
 							});
@@ -79,8 +77,6 @@
         }
 	    });
 
-
-
 	    $('#infoModal').on('show.bs.modal', function (event) {
 	      var id = $(event.relatedTarget).attr('id'),
 		  			modal = $(this),
@@ -92,22 +88,6 @@
 			  		}
 			  });
 			  modal.find('.modal-title').text('Ref. #' + id)
-			})
-
-			$('#infoPayment').on('show.bs.modal', function (event) {
-					var id = $(event.relatedTarget).attr('id'),
-		  			modal = $(this),
-		  			credits = JSON.parse(prestashop.modules.ps_kaiowa.credits);
-
-		  		$.each(credits.datos.cuposaldo.creditos_vigentes, function( index, value ) {
-		  				if(value.id_obligacion == id) {
-		  					$('#paymentQuotes option').remove();
-		  					for (i = 1; i <= value.cuotas_pendientes; i++) {
-		  						$('#paymentQuotes').append('<option value="'+i+'">'+i+' Cuota</option>').attr('data-id',id);
-		  					}
-		  					$('#total-consig').html(value.wompi.amountOriginal);
-		  				}
-		  		})
 			});
 
 			$('#paymentQuotes').on('click', function(e){
@@ -126,40 +106,26 @@
 			})
 
 			$('#infoPayment .payment-wompi').on('click',function(e) {
-				var quotes = $('#infoPayment #paymentQuotes').val(),
-						id = $('#infoPayment #paymentQuotes').attr('data-id'),
-						credits = JSON.parse(prestashop.modules.ps_kaiowa.credits);
-	  		$.each(credits.datos.cuposaldo.creditos_vigentes, function( index, value ) {
-  				if(value.id_obligacion == id) {
-  					if(quotes > 1) {
-  						value.wompi.amountInCents = value.wompi.amountInCents * quotes;	
-  					}
-  					$('body').css('overflow','auto');
-  					var checkout = new WidgetCheckout(value.wompi);
-  					checkout.open(function(result) {
-  						console.log(result);
-  						$.ajax({
-						  	type: "POST",
-						  	url: window.location.href,
-						  	data: {
-						  		ajax: true,
-						  		action: 'save-payment',
-						  		form: result,
-						  		cuotas: quotes
-						  	},
-		  					success: function(data) {
-		  						console.log(data);
-		  					},
-		  					fail: function(data) {
-		  						alert('Error al registrar el pago, contacte al administrador');
-		  					},
-						  });
-
-
-  						//window.location.reload();
-						});
-  				}
-	  		})
+				$('body').css('overflow','auto');
+				var checkout = new WidgetCheckout(prestashop.modules.ps_kaiowa.wompi);
+				checkout.open(function(result) {
+					$.ajax({
+				  	type: "POST",
+				  	url: window.location.origin + '/responses?type=paymentCuote',
+				  	data: {
+				  		ajax: true,
+				  		action: 'save-payment',
+				  		form: result
+				  	},
+  					success: function(data) {
+  						$('button.close').click();
+  						window.location.reload();
+  					},
+  					fail: function(data) {
+  						alert('Error al registrar el pago, contacte al administrador');
+  					},
+				  });
+				});
 			})
 	});
 }( jQuery ));

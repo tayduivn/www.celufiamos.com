@@ -1,6 +1,7 @@
 <?php
 require_once(dirname(__FILE__).'/../../classes/store.php');
 require_once(dirname(__FILE__).'/../../classes/cuotas.php');
+require_once(dirname(__FILE__).'/../../ps_store.php');
 
 class ps_storeStoreModuleFrontController extends ModuleFrontController
 {
@@ -22,8 +23,48 @@ class ps_storeStoreModuleFrontController extends ModuleFrontController
     return $result;
   }
 
+  private function list_orders($orders) {
+
+  }
+
+
+
   private function _ajax_actions() {
 		switch (Tools::getValue('action')) {
+			case 'register-payment':
+				$date = date('Y-m-d H:i:s');
+				$id = Tools::getValue('form');
+				$Order = new Order($id);
+				if ((int)$Order->current_cuote !== 27) {
+					$cuotas = new cuotasCore();
+					$cuotas->value = $Order->getTotalProductsWithoutTaxes() * Tools::getValue('cuotas');
+					$cuotas->quotas = Tools::getValue('cuotas');
+					$cuotas->id_customer = $Order->id_customer;
+					$cuotas->payment_method = 'Pago en tienda';
+					$cuotas->id_order = $id;
+					$cuotas->date = $date;
+					$cuotas->add();
+					$response['haserrors'] = false;
+					$response['message'] = 'Pago registrado';
+					$response['info'] = array(
+						'date' => $date,
+						'quotas' => $cuotas->quotas,
+						'total' => Tools::displayPrice($cuotas->value),
+						'factura' => $this->context->link->getPageLink('pdf-invoice') . '&id_order=' . $id
+					);
+				} else {
+					$response['haserrors'] = false;
+					$response['message'] = 'Este crédito ya tiene 6 cuotas registradas ';
+					$response['removebutton'] = true;
+					$response['info'] = array(
+						'date' => $date,
+						'quotas' => $cuotas->quotas,
+						'total' => Tools::displayPrice($cuotas->value),
+						'factura' => $this->context->link->getPageLink('pdf-invoice') . '&id_order=' . $id
+					);
+				}
+				die(json_encode($response));
+			break;
 			case 'save-payment':
 				try {
 					$date = date('Y-m-d H:i:s');
@@ -33,15 +74,6 @@ class ps_storeStoreModuleFrontController extends ModuleFrontController
 	        $history->id_order = (int)$id;
 	        $history->id_employee = 0;
 	        $history->changeIdOrderState(2, $history->id_order);
-					$cuotas = new cuotasCore();
-					$cuotas->value = $Order->getTotalProductsWithoutTaxes() * Tools::getValue('cuotas');
-					$cuotas->quotas = Tools::getValue('cuotas');
-					$cuotas->id_customer = $Order->id_customer;
-					$cuotas->payment_method = 'Pago en tienda';
-					$cuotas->id_order = $history->id_order;
-					$cuotas->date = $date; 
-					$cuotas->add();
-
 					$response['haserrors'] = false;
 					$response['message'] = 'Pago registrado';
 					$response['info'] = array(
@@ -76,16 +108,20 @@ class ps_storeStoreModuleFrontController extends ModuleFrontController
 				die();
 			break;
 			case 'search-payments-customer':
+				$module = new Ps_Store();
 				$form = Tools::getValue('form');
 				$id_customer = $this->customerExistsByDocument($form['document']);
 				$orders = Order::getCustomerOrders($id_customer);
-				print_r($orders);
+				$response['haserrors'] = false;
+				$response['message'] = $module->list_orders($orders);
+				die(json_encode($response));
 			break;
 			case 'create-order':
 				$form = Tools::getValue('form');
 				$user = explode('?',$form['customer'])[1];
 				$user = str_replace('document=','',$user);
-				$product = $form['id_product']; 
+				$product = $form['id_product'];
+				$product_attribute = $form['id_product_attribute'] ? $form['id_product_attribute'] : 0; 
 				if(!empty($product) && !empty($user)) {
 					global $cookie;
 					$Employee = new Customer($cookie->id_customer);
@@ -97,7 +133,7 @@ class ps_storeStoreModuleFrontController extends ModuleFrontController
 					$Cart->id_customer = $Customer->id;
 					$Cart->id_lang  = $cookie->id_lang;
 					$Cart->add();
-					$Cart->updateQty(1, $product, $attribute, false);
+					$Cart->updateQty(1, $product, $product_attribute, false);
 
           $order = new Order();
 					$order->reference = Order::generateReference();
@@ -256,7 +292,6 @@ class ps_storeStoreModuleFrontController extends ModuleFrontController
 					$Customer->mobile = $form['mobile'];
 					$Customer->politics = true;
 					$Customer->habeas = true;
-					$Customer->id_celufiamos_store = $Employee->id_celufiamos_store;
 					$Customer->email = $form['email'];
 					$Customer->passwd = $form['document'];
 					$Customer->active = 0;
@@ -386,12 +421,19 @@ class ps_storeStoreModuleFrontController extends ModuleFrontController
       }
       $link = new Link;
       foreach ($rq as &$row) {
-
       		$cover = Product::getCover($row['id_product']);
+      		$product = new Product($row['id_product']);
+      		$combinations = $product->getAttributeCombinations();
+      		foreach( $combinations as &$combination) {
+      			if($combination['quantity'] > 0) {
+      				$row['combinations'][$combination['id_product_attribute']].= '<b>'. $combination['group_name'] . ':</b> '
+      					. $combination['attribute_name'].'<br>';
+      			}
+      		}
+
       		$row['product_image'] = Tools::getShopProtocol().$link->getImageLink($row['link_rewrite'], $row['id_product'].'-'.current(Product::getCover($row['id_product'])), 'home_default');
           $row = Product::getTaxesInformations($row);
       }
-
       return $rq;
  }
 

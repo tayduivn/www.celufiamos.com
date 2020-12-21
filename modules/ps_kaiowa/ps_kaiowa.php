@@ -145,11 +145,28 @@ class Ps_Kaiowa extends PaymentModule
             || !$this->registerHook('displayFooter')
             || !$this->registerHook('displayOrderDetail')
             || !$this->registerHook('displayCustomerAccountForm')
+            || !$this->registerHook('displayInvoice')
         ) {
             return false;
         }
         return true;
     }
+
+    public function hookDisplayInvoice($params) {
+        $Order = new Order(Tools::getValue('id_order'));
+        $history = $Order->getHistory(Context::getContext()->language->id);
+        $cuotes = array();
+        foreach ($history as $cuote) {
+            if (in_array($cuote['id_order_state'],array(21,22,23,24,25,26,27))) {
+               array_push($cuotes, $cuote); 
+            }
+        }
+        $this->smarty->assign(array(
+            'cuotes' => $cuotes,
+            'vlrcuota' => $Order->getTotalProductsWithTaxes()
+        ));
+        return $this->display(__FILE__, 'views/templates/hook/hookDisplayInvoice.tpl');
+    } 
 
     public function hookDisplayCustomerAccountForm($params) {
         return '<div class="col-md-12" style="text-align:center;margin-bottom:20px">
@@ -161,8 +178,13 @@ class Ps_Kaiowa extends PaymentModule
     public function hookDisplayOrderDetail($params) {
         $cart = new Cart($params['order']->id_cart);
         require_once(dirname(__FILE__).'/../ps_store/classes/cuotas.php');
+        $request = array('type' => 'status'); 
+        if(!empty($params['order']->id_customer)) {
+            $customer = New Customer($params['order']->id_customer);
+            $request['document'] = $customer->document;  
+        }
 
-        $ws_response = Hook::exec('actionWSKaiowa', array('type' => 'status'), null, true);
+        $ws_response = Hook::exec('actionWSKaiowa', $request, null, true);
         $status = json_decode($ws_response['ps_kaiowa']);
         
         foreach ($status->datos->cuposaldo->creditos_vigentes as $credito) {
@@ -316,9 +338,17 @@ class Ps_Kaiowa extends PaymentModule
             $amountInCents = $obligacion->valor_cuota.'00';
             $redirectURL = $this->context->link->getModuleLink('ps_kaiowa', 'responses',array('type' => 'paymentQuotes'));
         } else {
-            $reference = base64_encode($this->context->cart->id.'|'.$this->context->customer->id.'|'.time());
-            $amountInCents = $this->context->cart->getOrderTotal(true, Cart::BOTH).'00';
-            $redirectURL = $this->context->link->getModuleLink('ps_kaiowa', 'responses',array('type' => 'payment'));
+            $page = $this->context->controller->php_self;
+            if ($page == 'order-detail') {
+                $Cart = $this->context->cart->getCartByOrderId(Tools::getValue('id_order'));
+                $reference = base64_encode($Cart->id.'|'.$Cart->id_customer.'|'.time());
+                $amountInCents = $Cart->getOrderTotal(true, Cart::BOTH).'00';
+                $redirectURL = $this->context->link->getModuleLink('ps_kaiowa', 'responses',array('type' => 'payment'));
+            } else {
+                $reference = base64_encode($this->context->cart->id.'|'.$this->context->customer->id.'|'.time());
+                $amountInCents = $this->context->cart->getOrderTotal(true, Cart::BOTH).'00';
+                $redirectURL = $this->context->link->getModuleLink('ps_kaiowa', 'responses',array('type' => 'payment'));
+            }
         }
 
         if(Configuration::get('BANK_KAIOWA_HOUR_THANK_YOU')) {
@@ -386,7 +416,7 @@ class Ps_Kaiowa extends PaymentModule
                     if ($response->cuota < 69900) {
                         $response->cuota = 0;
                     }
-                    //$response->cuota = 150000;
+                    $response->cuota = 150000;
                     return $response;
                 break;
                 case self::CONCILIATION:
@@ -408,12 +438,11 @@ class Ps_Kaiowa extends PaymentModule
                     return $response;
                 break;                
                 case self::STATUS:
-                    
                     $request = array(
                         'a_schemacia' => Configuration::get('BANK_KAIOWA_URL_SCHEMACIA'),
                         'a_login' => Configuration::get('BANK_KAIOWA_USER'),
                         'a_password' => Configuration::get('BANK_KAIOWA_PASSWORD'),
-                        'a_cedula_deudor' => $this->context->customer->document                        
+                        'a_cedula_deudor' => !empty($params['document']) ? $params['document'] : $this->context->customer->document
                     );
                     $opts['http']['method'] = 'post';
                     $opts['http']['content'] = json_encode($request);

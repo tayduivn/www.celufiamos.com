@@ -31,7 +31,9 @@
 	<!-- Invoicing -->
 	<tr>
 		<td colspan="12">
+
 			{$addresses_tab}
+
 		</td>
 	</tr>
 {/if}
@@ -61,19 +63,6 @@
 		</td>
 	</tr>
 
-	<!-- Hook -->
-	{if isset($HOOK_DISPLAY_PDF)}
-	<tr>
-		<td colspan="12" height="30">&nbsp;</td>
-	</tr>
-
-	<tr>
-		<td colspan="12">
-			{hook h='displayInvoice'}
-		</td>
-	</tr>
-	{/if}
-
 	<tr>
 		<td colspan="12" height="10">&nbsp;</td>
 	</tr>
@@ -101,8 +90,6 @@
 		<td colspan="12" height="10">&nbsp;</td>
 	</tr>
 
-
-
 	<tr>
 		<td colspan="6" class="left">
 
@@ -111,8 +98,6 @@
 		</td>
 		<td colspan="1">&nbsp;</td>
 	</tr>
-
-
 
 	<tr>
 		<td colspan="6" class="left">
@@ -141,5 +126,18 @@
 		</td>
 	</tr>
 
+	<!-- Hook -->
+	{if isset($HOOK_DISPLAY_PDF)}
+	<tr>
+		<td colspan="12" height="30">&nbsp;</td>
+	</tr>
+
+	<tr>
+		<td colspan="2">&nbsp;</td>
+		<td colspan="10">
+			{$HOOK_DISPLAY_PDF}
+		</td>
+	</tr>
+	{/if}
 
 </table>

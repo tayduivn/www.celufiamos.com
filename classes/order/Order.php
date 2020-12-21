@@ -174,6 +174,8 @@ class OrderCore extends ObjectModel
 
     public $id_celufiamos_store;
 
+    public $current_cuote;
+
     /**
      * @see ObjectModel::$definition
      */
@@ -191,6 +193,7 @@ class OrderCore extends ObjectModel
             'id_customer' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
             'id_carrier' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
             'id_celufiamos_store' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+            'current_cuote' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
             'current_state' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
             'secure_key' => array('type' => self::TYPE_STRING, 'validate' => 'isMd5'),
             'payment' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true),

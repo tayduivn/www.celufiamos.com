@@ -3,6 +3,8 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 
+//ini_set('display_errors',true);
+//error_reporting('E_ALL');
 class Ps_Store extends Module {
 
 	CONST LANGUAGE_KEY = 'Modules.PsStore.Admin';
@@ -46,6 +48,32 @@ class Ps_Store extends Module {
 			return false;
 		}
 		return true;
+	}
+
+	public function list_orders($orders, $config = array()) {
+
+		foreach ($orders as &$order) {
+			if (!in_array($order['current_cuote'],array(27))) {
+				$orderObject = new Order($order['id_order']);
+				$order = json_decode(json_encode($order), true);
+				$order['details'] = current($orderObject->getOrderDetailList());
+				$Customer = new Customer($order['id_customer']);
+				$payment = Hook::exec('displayOrderDetail', array('order' => $orderObject), null, true);
+				$order['payment'] = $payment['ps_kaiowa'];
+				$order['product_name'] = $order['details']['product_name'];
+				$order['customer'] = $Customer;
+				$order['paymenturl'] = $this->context->link->getModuleLink('ps_store', 'store').'?document='.$order['id_customer'].'&cart='.$order['id_cart'];
+				$id_cuote = $order['current_cuote'];
+				$order['current_cuote'] = Db::getInstance()->getValue('
+					SELECT name FROM '._DB_PREFIX_.'order_state_lang WHERE id_order_state = '. $id_cuote .' AND id_lang = ' . Context::getContext()->language->id );
+				$newOrders[] = $order;
+			}
+		}
+
+    $this->smarty->assign(array(
+        'orders' => $newOrders
+    ));		
+		return $this->display(__FILE__, 'views/templates/front/orders-list.tpl');
 	}
 
 	public function hookDisplayAdminOrderLeft($params) {

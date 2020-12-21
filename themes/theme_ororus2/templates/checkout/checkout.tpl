@@ -51,7 +51,7 @@
       <div class="container">
 
       {block name='content'}
-      <h1 class="text-center mb-1 pb-1">{l s='Paga tu primera cuota' d='Shop.Theme.Actions'}</h1>
+      <h1 class="text-center mb-1 pb-1">{l s='Para finalizar el proceso revisa los cuatro puntos a continuación, recuerda indicarnos la dirección de envío y la forma del pago de la primera cuota.' d='Shop.Theme.Actions'}</h1>
         <section id="content">
           <div class="row">
             <div class="col-md-8">

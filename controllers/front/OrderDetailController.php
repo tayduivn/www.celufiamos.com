@@ -186,6 +186,7 @@ class OrderDetailControllerCore extends FrontController
 
                 $this->context->smarty->assign([
                     'order' => $this->order_to_display,
+                    'showpayment' => in_array($order->current_cuote,array(21,22,23,24,25,26)),
                     'HOOK_DISPLAYORDERDETAIL' => Hook::exec('displayOrderDetail', ['order' => $order]),
                 ]);
             } else {

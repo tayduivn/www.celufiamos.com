@@ -6,7 +6,8 @@ class cuotasCore extends ObjectModel
 	public $id_customer;
 	public $payment_method;
 	public $id_order;
-	public $date;	
+	public $date;
+	public $noSetStatusOrder = false;
 
 	/**
 	 * @see ObjectModel::$definition
@@ -34,6 +35,51 @@ class cuotasCore extends ObjectModel
 		return Db::getInstance()->executeS($sql);
 	}
 
+	public function updateOrderCurrentState($state, $order_id) {
+		$sql = 'UPDATE `'._DB_PREFIX_.'orders` SET `current_cuote` = '.$state.' WHERE `id_order` = '.$order_id.';';
+		return Db::getInstance()->execute($sql);
+	}
+
+  public function setStateOrder($id_order) {
+  	$finalize = false;
+  	$order = new Order($id_order);
+  	$history = new OrderHistory();
+  	$state = Db::getInstance()->getValue('
+        SELECT max(`id_order_state`)
+        FROM `' . _DB_PREFIX_ . 'order_history`
+        WHERE `id_order` = ' . (int) $id_order . ' and id_order_state between 21 and 26
+        ORDER BY `date_add` DESC, `id_order_history` DESC');
+  	if (!empty($order)) {
+  		switch($state) {
+ 				case 21:
+ 				case 22:
+ 				case 23:
+ 				case 24:
+ 				case 25:
+ 				case 26:
+ 					$finalize = true;
+ 					$newstate = $order->current_state + 1;
+ 				break;
+ 				default:
+ 					if(empty($newstate)) {
+ 							$newstate = 21;
+  				}
+  		}
+  		if (!empty($newstate)) {
+  			$order->setCurrentState($newstate, (int) Context::getContext()->customer->id);
+  			$this->updateOrderCurrentState($newstate, (int) $id_order);
+  			if($newstate == 26) {
+  				$order->setCurrentState(27, (int) Context::getContext()->customer->id);
+  				$this->updateOrderCurrentState(27, (int) $id_order);
+  			}
+	  	}
+  	}
+  }
+
+  public function getCurrentCuoteState() {
+  	$order = new Order($id_order);
+  }
+
 	public function getOrderIdByIdObligacion($id_obligacion) {
 		if(empty($id_obligacion))
 			return null;
@@ -49,6 +95,9 @@ class cuotasCore extends ObjectModel
 
 	public function add($autodate = true, $null_values = false)
   {
+  	if (!$this->noSetStatusOrder) {
+  		$this->setStateOrder($this->id_order);  		
+  	}
 		return parent::add($autodate, $null_values);
 	}
 }

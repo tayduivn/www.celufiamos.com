@@ -26,17 +26,16 @@
 
 	<thead>
 	<tr>
-		<th class="product header small" width="{$layout.reference.width}%">{l s='Reference' d='Shop.Pdf' pdf='true'}</th>
-		<th class="product header small" width="{$layout.product.width}%">{l s='Product' d='Shop.Pdf' pdf='true'}</th>
-		<th class="product header small" width="{$layout.tax_code.width}%">{l s='Tax Rate' d='Shop.Pdf' pdf='true'}</th>
+		<th class="product header small" >{l s='Reference' d='Shop.Pdf' pdf='true'}</th>
+		<th class="product header small" >{l s='Product' d='Shop.Pdf' pdf='true'}</th>
 
 		{if isset($layout.before_discount)}
-			<th class="product header small" width="{$layout.unit_price_tax_excl.width}%">{l s='Base price' d='Shop.Pdf' pdf='true'} <br /> {l s='(Tax excl.)' d='Shop.Pdf' pdf='true'}</th>
+			<th class="product header small" >{l s='Cuotas' d='Shop.Pdf' pdf='true'}</th>
 		{/if}
 
-		<th class="product header-right small" width="{$layout.unit_price_tax_excl.width}%">{l s='Unit Price' d='Shop.Pdf' pdf='true'} <br /> {l s='(Tax excl.)' d='Shop.Pdf' pdf='true'}</th>
-		<th class="product header small" width="{$layout.quantity.width}%">{l s='Qty' d='Shop.Pdf' pdf='true'}</th>
-		<th class="product header-right small" width="{$layout.total_tax_excl.width}%">{l s='Total' d='Shop.Pdf' pdf='true'} <br /> {l s='(Tax excl.)' d='Shop.Pdf' pdf='true'}</th>
+		<th class="product header-right small" >{l s='Valor cuota' d='Shop.Pdf' pdf='true'}</th>
+		<th class="product header small" >{l s='Nro Cuotas' d='Shop.Pdf' pdf='true'}</th>
+		<th class="product header-right small" >{l s='Total' d='Shop.Pdf' pdf='true'}</th>
 	</tr>
 	</thead>
 
@@ -70,9 +69,6 @@
 				{/if}
 
 			</td>
-			<td class="product center">
-				{$order_detail.order_detail_tax_label}
-			</td>
 
 			{if isset($layout.before_discount)}
 				<td class="product center">
@@ -92,10 +88,10 @@
 				{/if}
 			</td>
 			<td class="product center">
-				{$order_detail.product_quantity}
+				{Configuration::get('BANK_KAIOWA_CUOTAS')}
 			</td>
 			<td  class="product right">
-				{displayPrice currency=$order->id_currency price=$order_detail.total_price_tax_excl_including_ecotax}
+				{displayPrice currency=$order->id_currency price=($order_detail.total_price_tax_excl_including_ecotax * Configuration::get('BANK_KAIOWA_CUOTAS'))}
 			</td>
 		</tr>
 

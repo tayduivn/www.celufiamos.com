@@ -34,7 +34,7 @@
 	<td style="width: 50%; text-align: right;">
 		<table style="width: 100%">
 			<tr>
-				<td style="font-weight: bold; font-size: 14pt; color: #444; width: 100%;">{if isset($header)}{$header|escape:'html':'UTF-8'|upper} DE VENTA{/if} {$title|escape:'html':'UTF-8'} </td>
+				<td style="font-weight: bold; font-size: 14pt; color: #444; width: 100%;">COMPROBANTE DE VENTA</td>
 			</tr>
 		</table>
 	</td>

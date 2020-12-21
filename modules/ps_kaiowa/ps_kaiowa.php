@@ -416,7 +416,7 @@ class Ps_Kaiowa extends PaymentModule
                     if ($response->cuota < 69900) {
                         $response->cuota = 0;
                     }
-                    //$response->cuota = 150000;
+                    $response->cuota = 150000;
                     return $response;
                 break;
                 case self::CONCILIATION:

@@ -96,6 +96,8 @@
             display: none !important;
           }
         </style>
+        <script src="https://www.google.com/recaptcha/api.js"></script>
+        <div class="g-recaptcha" data-sitekey="6Le2QQ8aAAAAAGUfhvGfZbEYcTPq-qz4Iw5YaGk2"></div>
         <input type="text" name="url" value=""/>
         <input type="hidden" name="token" value="{$token}" />
         <button type="submit" name="submitMessage">

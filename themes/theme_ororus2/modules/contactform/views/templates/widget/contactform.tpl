@@ -112,6 +112,10 @@
       </section>
 
       <footer class="form-footer text-sm-right">
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+        <div class="row" style="margin-bottom: 20px; margin-right: 0">
+        <div class="g-recaptcha" style="float: right" data-sitekey="6LdeRw8aAAAAAK1oxUUB8CuyrRLWT3cePBFaMkIp"></div>
+        </div>
         <input class="btn btn-primary" type="submit" name="submitMessage" value="{l s='Send' d='Shop.Theme.Actions'}">
       </footer>
     {/if}

@@ -25,7 +25,7 @@
 {extends file='customer/page.tpl'}
 
 {block name='page_title'}
-  {l s='Order history' d='Shop.Theme.Customeraccount'}
+  {l s='Pedidos y pagos' d='Shop.Theme.Customeraccount'}
 {/block}
 
 {block name='page_content'}

@@ -59,7 +59,7 @@
         <a class="col-lg-3 col-md-6 col-sm-6 col-xs-12" id="history-link" href="{$urls.pages.history}">
           <span class="link-item">
             <i class="material-icons">&#xE916;</i>
-            {l s='Order history and details' d='Shop.Theme.Customeraccount'}
+            {l s='pedidos y pagos' d='Shop.Theme.Customeraccount'}
           </span>
         </a>
       {/if}

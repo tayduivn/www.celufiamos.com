@@ -64,7 +64,7 @@ class Contactform extends Module implements WidgetInterface
     public function getWidgetVariables($hookName = null, array $configuration = [])
     {
         $notifications = false;
-        if (Tools::isSubmit('submitMessage')) {
+        if (Tools::isSubmit('submitMessage') && ($gcaptcha = (int)(Tools::getValue('g-recaptcha-response')))) {
             $this->sendMessage();
 
             if (!empty($this->context->controller->errors)) {
@@ -74,6 +74,9 @@ class Contactform extends Module implements WidgetInterface
                 $notifications['messages'] = $this->context->controller->success;
                 $notifications['nw_error'] = false;
             }
+        } else {
+            $notifications['messages'] = Tools::displayError('Complete el captcha');
+            $notifications['nw_error'] = true;
         }
 
         if (($id_customer_thread = (int)Tools::getValue('id_customer_thread')) && $token = Tools::getValue('token')) {

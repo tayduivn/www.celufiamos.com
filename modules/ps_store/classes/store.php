@@ -43,6 +43,43 @@ class storeCore extends ObjectModel
 		return $orders;
 	}
 
+    public static function getFullOrdersByStoreId($id_store, $fini, $ffin, $show_hidden_status = false, Context $context = null)
+    {
+        if (!$context) {
+            $context = Context::getContext();
+        }
+
+        $orderStates = OrderState::getOrderStates((int) $context->language->id);
+        $indexedOrderStates = array();
+        foreach ($orderStates as $orderState) {
+            $indexedOrderStates[$orderState['id_order_state']] = $orderState;
+        }
+        $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+        SELECT o.*, 
+          (SELECT SUM(od.`product_quantity`) FROM `' . _DB_PREFIX_ . 'order_detail` od WHERE od.`id_order` = o.`id_order`) nb_products,
+          (SELECT oh.`id_order_state` FROM `' . _DB_PREFIX_ . 'order_history` oh
+           LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON (os.`id_order_state` = oh.`id_order_state`)
+           WHERE oh.`id_order` = o.`id_order` ' .
+            (!$show_hidden_status ? ' AND os.`hidden` != 1' : '') .
+            ' ORDER BY oh.`date_add` DESC, oh.`id_order_history` DESC LIMIT 1) id_order_state
+        FROM `' . _DB_PREFIX_ . 'orders` o
+        WHERE o.id_celufiamos_store = '.$id_store.' '. Shop::addSqlRestriction(Shop::SHARE_ORDER) . '
+        	and o.date_add BETWEEN "'.$fini.'" and "'.$ffin.'"
+        GROUP BY o.`id_order`
+        ORDER BY o.`date_add` DESC');
+
+        if (!$res) {
+            return array();
+        }
+
+        foreach ($res as $key => $val) {
+            $res[$key]['order_state'] = $indexedOrderStates[$val['id_order_state']]['name'];
+            $res[$key]['invoice'] = $indexedOrderStates[$val['id_order_state']]['invoice'];
+            $res[$key]['order_state_color'] = $indexedOrderStates[$val['id_order_state']]['color'];
+        }
+        return $res;
+    }	
+
 	public function getFilterStores() {
 		$stores = self::getStores();
 		$filters = array();

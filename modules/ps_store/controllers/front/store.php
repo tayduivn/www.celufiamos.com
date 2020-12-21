@@ -23,19 +23,32 @@ class ps_storeStoreModuleFrontController extends ModuleFrontController
     return $result;
   }
 
-  private function list_orders($orders) {
-
-  }
-
-
-
   private function _ajax_actions() {
 		switch (Tools::getValue('action')) {
+			case 'filter':
+				global $cookie;
+				$fini = Tools::getValue('fini');
+				$ffin = Tools::getValue('ffin');
+				$Employee = new Customer($cookie->id_customer);
+				$module = new Ps_Store();
+				if(Tools::getValue('type') == 1) {
+					$orders = storeCore::getFullOrdersByStoreId($Employee->id_celufiamos_store, $fini, $ffin);
+					$response['haserrors'] = false;
+					$response['message'] = $module->list_orders($orders);
+				} else {
+					$cuotas = new cuotasCore();
+					$paymentList = $cuotas->getPaymentsByIdStore($Employee->id_celufiamos_store, $fini, $ffin);
+					$response['message'] = $module->payment_list($paymentList);
+				}
+				die(json_encode($response));
+			break;
 			case 'register-payment':
 				$date = date('Y-m-d H:i:s');
 				$id = Tools::getValue('form');
 				$Order = new Order($id);
 				if ((int)$Order->current_cuote !== 27) {
+					global $cookie;
+					$Employee = new Customer($cookie->id_customer);
 					$cuotas = new cuotasCore();
 					$cuotas->value = $Order->getTotalProductsWithoutTaxes() * Tools::getValue('cuotas');
 					$cuotas->quotas = Tools::getValue('cuotas');
@@ -43,6 +56,7 @@ class ps_storeStoreModuleFrontController extends ModuleFrontController
 					$cuotas->payment_method = 'Pago en tienda';
 					$cuotas->id_order = $id;
 					$cuotas->date = $date;
+					$cuotas->id_celufiamos_store = $Employee->id_celufiamos_store;
 					$cuotas->add();
 					$response['haserrors'] = false;
 					$response['message'] = 'Pago registrado';
@@ -462,10 +476,6 @@ class ps_storeStoreModuleFrontController extends ModuleFrontController
 		} else if (Tools::getValue('document') && Tools::getValue('cart')) {
 			$this->_createPaymentForm();
 		}
-		$paymentList = storeCore::getOrdersByStoreId(
-			$this->context->customer->id_celufiamos_store,
-			$this->context->language->id
-		);
 		$states = StateCore::getStatesByIdCountry($this->country);
     $titles_array = array();
     $genders = Gender::getGenders($this->context->language->id);
@@ -477,7 +487,6 @@ class ps_storeStoreModuleFrontController extends ModuleFrontController
         );
     }
 		$this->context->smarty->assign(array(
-			'paymentList' => $paymentList,
 			'states' => $states,
 			'genders' => $titles_array
 		));		

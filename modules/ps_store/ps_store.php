@@ -50,6 +50,23 @@ class Ps_Store extends Module {
 		return true;
 	}
 
+	public function payment_list($list) {
+		foreach ($list as &$row) {
+			$customer = new Customer($row['id_customer']);
+			$order = new Order($row['id_order']);
+			$row['id_customer'] = $customer->firstname
+				. ($customer->firstname2 ? ' '.$customer->firstname2 : null)
+				. ' ' . $customer->lastname
+				. ($customer->lastname2 ? ' '.$customer->lastname2 : null);
+			$row['id_order'] = $order->reference;
+		}
+
+    $this->smarty->assign(array(
+        'list' => $list
+    ));		
+		return $this->display(__FILE__, 'views/templates/front/payment-list.tpl');
+	}	
+
 	public function list_orders($orders, $config = array()) {
 
 		foreach ($orders as &$order) {

@@ -209,6 +209,35 @@
 			}
 		});
 
+		$body.on('click','#filter-sells',function(e) {
+			if(!$body.find('#filter-fini').val() || !$body.find('#filter-ffin').val()) {
+				alert('Seleccione un rango de fechas')
+			} else {
+				$.ajax({
+				  	type: "POST",
+				  	url: window.location.href,
+				  	data: {
+				  		ajax: true,
+				  		action: 'filter',
+				  		fini: $body.find('#filter-fini').val(),
+				  		ffin: $body.find('#filter-ffin').val(),
+				  		type: $body.find('#filter-type').val(),
+				  	},
+  					success: function(data) {
+  						data = JSON.parse(data);
+  						if (data.haserrors) {
+  							alert(data.message)
+  						} else {
+  							$body.find('#search-result').html(data.message); 
+  						}
+  					},
+  					fail: function(data) {
+  						alert('Error: No pudo encontrarse el documento, contacte al administrador');
+  					},
+				});
+			}
+		});
+
 		$body.on('click','#search-customer',function(e){
 			var input = $body.find('#search_document').val();
 			if(!input) {
@@ -276,6 +305,15 @@
 
 			}
 			/* Act on the event */
+		});
+
+		$('#filter-fini, #filter-ffin').datepicker({
+			dateFormat: 'yy-mm-dd',
+			monthNames: [ "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" ],
+			monthNamesShort: [ "Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic" ],
+			dayNamesMin: [ "Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa" ],
+			changeMonth: true,
+			changeYear: true
 		});
 
 	  $('input[name="birthday2"]').datepicker({

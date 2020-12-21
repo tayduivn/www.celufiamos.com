@@ -8,6 +8,7 @@ class cuotasCore extends ObjectModel
 	public $id_order;
 	public $date;
 	public $noSetStatusOrder = false;
+	public $id_celufiamos_store = 0;
 
 	/**
 	 * @see ObjectModel::$definition
@@ -23,7 +24,8 @@ class cuotasCore extends ObjectModel
 			'id_customer' => array('type' => self::TYPE_INT),
 			'payment_method' => array('type' => self::TYPE_STRING),
 			'id_order' => array('type' => self::TYPE_INT),
-			'date' => array('type' => self::TYPE_DATE)
+			'date' => array('type' => self::TYPE_DATE),
+			'id_celufiamos_store' => array('type' => self::TYPE_INT)
 		)
 	);
 
@@ -34,6 +36,15 @@ class cuotasCore extends ObjectModel
 		$sql = 'SELECT * FROM '._DB_PREFIX_.'quotes_payments where id_order = "'.$id_order.'"';
 		return Db::getInstance()->executeS($sql);
 	}
+
+
+	public static function getPaymentsByIdStore($id_store, $fini, $ffin) {
+		$sql = 'SELECT * FROM '._DB_PREFIX_.'quotes_payments 
+			WHERE id_celufiamos_store = "'.$id_store.'"
+				AND date BETWEEN "'.$fini.'" and "'.$ffin.'"
+			';
+		return Db::getInstance()->executeS($sql);
+	}	
 
 	public function updateOrderCurrentState($state, $order_id) {
 		$sql = 'UPDATE `'._DB_PREFIX_.'orders` SET `current_cuote` = '.$state.' WHERE `id_order` = '.$order_id.';';

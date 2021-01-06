@@ -51,35 +51,43 @@
 			e.preventDefault();
 			var reference = $(this).attr('data-reference');
 			var quotas = $body.find('#quotes').val();
-			if (window.confirm("¿Desea registrar el pago de "+quotas+" cuota(s) para esta orden?")) { 
-				$.ajax({
-				  	type: "POST",
-				  	url: window.location.href,
-				  	data: {
-				  		ajax: true,
-				  		action: 'register-payment',
-				  		form: reference,
-				  		cuotas: quotas
-				  	},
-						success: function(data) {
-							data = JSON.parse(data);
-							if (data.haserrors) {
-								alert(data.message);
-
-							} else {
-								console.log(data);
-								alert(data.message);
-								$('#open-payment').remove();
-								$('#print').html('DESCARGAR COMPROBANTE').removeClass('hidden').attr('onclick', 'javascript:window.open(\''+data.info.factura+'\')');
-								$('button.close, #search-pay-customer').click();
-								window.open(data.info.factura);
-							}
-						},
-						fail: function(data) {
-							alert('Error: No pudo encontrarse el documento, contacte al administrador');
-						},
-				});
-			}
+			var imei = $body.find('#imei').size();
+			if(imei == 0 || (imei == 1 && $body.find('#imei').val() != '')) {
+				if(imei == 1) {
+					var imaivalue = $body.find('#imei').val(); 
+				}
+				if (window.confirm("¿Desea registrar el pago de "+quotas+" cuota(s) para esta orden?")) { 
+					$.ajax({
+					  	type: "POST",
+					  	url: window.location.href,
+					  	data: {
+					  		ajax: true,
+					  		action: 'register-payment',
+					  		form: reference,
+					  		cuotas: quotas,
+					  		imei: imaivalue,
+					  	},
+							success: function(data) {
+								data = JSON.parse(data);
+								if (data.haserrors) {
+									alert(data.message);
+								} else {
+									console.log(data);
+									alert(data.message);
+									$('#open-payment').remove();
+									$('#print').html('DESCARGAR COMPROBANTE').removeClass('hidden').attr('onclick', 'javascript:window.open(\''+data.info.factura+'\')');
+									$('button.close, #search-pay-customer').click();
+									window.open(data.info.factura);
+								}
+							},
+							fail: function(data) {
+								alert('Error: No pudo encontrarse el documento, contacte al administrador');
+							},
+					});
+				}
+		} else {
+			alert('Ingrese el IMEI');
+		}
 		});	
 
 		$body.on('click','#save-payment',function(e) {

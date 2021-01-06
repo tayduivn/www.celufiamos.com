@@ -55,8 +55,21 @@ class ps_kaiowaResponsesModuleFrontController extends ModuleFrontController
 			case 'cronjob':
 				$this->_cronjob();
 			break;
+			case 'saveimei':
+				$this->_saveimei();
+			break;
 		}
 		die('end');
+	}
+
+	private function _saveimei() {
+		$order_id = Tools::getValue('order');
+		$imei = Tools::getValue('imei');
+		if($order_id && $imei) {
+			$order = new Order($order_id);
+			$order->imei = $imei;
+			$order->update();
+		}
 	}
 
 	private function _cronjob() {
@@ -147,7 +160,7 @@ class ps_kaiowaResponsesModuleFrontController extends ModuleFrontController
 			$currency = Context::getContext()->currency;
 			$mailVars = array();
 			$total = (float)$cart->getOrderTotal(true, Cart::BOTH);
-			$state = $transaction['status'] == 'APPROVED' ? 21 : 8;
+			$state = $transaction['status'] == 'APPROVED' ? 21 : ($transaction['status'] == 'PENDING' ? 10 : 8);
 			$this->module->validateOrder(
 				$cart->id,
 				$state,

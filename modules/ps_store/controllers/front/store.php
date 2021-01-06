@@ -45,9 +45,14 @@ class ps_storeStoreModuleFrontController extends ModuleFrontController
 			case 'register-payment':
 				$date = date('Y-m-d H:i:s');
 				$id = Tools::getValue('form');
+				$imei = Tools::getValue('imei');
 				$Order = new Order($id);
 				if ((int)$Order->current_cuote !== 27) {
 					global $cookie;
+					if(!empty($imei)) {
+						$Order->imei = $imei;
+						$Order->update();
+					}
 					$Employee = new Customer($cookie->id_customer);
 					$cuotas = new cuotasCore();
 					$cuotas->value = $Order->getTotalProductsWithoutTaxes() * Tools::getValue('cuotas');

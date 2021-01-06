@@ -27,6 +27,7 @@
 	<thead>
 	<tr>
 		<th class="product header small" >{l s='Reference' d='Shop.Pdf' pdf='true'}</th>
+		<th class="product header small" >{l s='Imei' d='Shop.Pdf' pdf='true'}</th>
 		<th class="product header small" >{l s='Product' d='Shop.Pdf' pdf='true'}</th>
 
 		{if isset($layout.before_discount)}
@@ -48,6 +49,9 @@
 
 			<td class="product center">
 				{$order_detail.product_reference}
+			</td>
+			<td class="product center">
+				{$order->imei}
 			</td>
 			<td class="product left">
 				{if $display_product_images}

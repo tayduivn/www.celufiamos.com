@@ -1,10 +1,9 @@
 <?php
-
+require_once (dirname(__FILE__).'/../../classes/kaiowaUsers.php');
 class AdminKaiowaUsersController extends ModuleAdminController
 {
   public function __construct()
   {
-    require_once (dirname(__FILE__).'/../../classes/kaiowaUsers.php');
     $this->deleted = false;
     $this->bootstrap = true;
     $this->colorOnBackground = false;
@@ -12,8 +11,10 @@ class AdminKaiowaUsersController extends ModuleAdminController
     $this->token = Tools::getAdminTokenLite('AdminKaiowaUsers');
     $this->context = Context::getContext();
     $this->table = 'kaiowa_users';
+    $this->className = 'kaiowaUsersCore';
     $this->allow_export = true; 
     parent::__construct();
+    $this->addRowAction('delete');
     $this->meta_title = $this->module->getTranslator()->trans('Usuarios no aprobados', array(), 'Admin.Global');
     $this->fields_list = array(
         'id_kaiowa_users' => array(

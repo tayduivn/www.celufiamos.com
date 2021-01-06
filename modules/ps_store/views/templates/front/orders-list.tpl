@@ -24,6 +24,7 @@
         <div class="row">
           <div class="col-md-12 pb-3">
             <a href="#" data-toggle="modal" data-order="{$order['id_order']}" data-reference="{$order['id_order']}" data-target="#paymentSave" class="btn btn-success">Registrar Pago</a>
+            <a href="/index.php?controller=pdf-invoice&id_order={$order['id_order']}" target="new" class="btn btn-primary">Descargar Comprobante</a>
           </div>
         </div>
 			  {$order['payment'] nofilter}

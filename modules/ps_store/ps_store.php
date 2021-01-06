@@ -111,7 +111,8 @@ class Ps_Store extends Module {
     $payments = cuotasCore::getPaymentsByIdOrder($Order->id);
     $this->smarty->assign(array(
         'kaiowa' => $data,
-        'pagos' => $payments
+        'pagos' => $payments,
+        'imei' => $Order->imei
     ));
 		return $this->display(__FILE__, 'views/templates/hook/hookDisplayAdminOrderRight.tpl');
 	}

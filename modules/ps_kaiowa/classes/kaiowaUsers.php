@@ -13,7 +13,7 @@ class kaiowaUsersCore extends ObjectModel
 	 */
 	public static $definition = array(
 		'table' => 'kaiowa_users',
-		'primary' => 'id',
+		'primary' => 'id_kaiowa_users',
 		'multilang' => false,
 		'multilang_shop' => false,
 		'fields' => array(

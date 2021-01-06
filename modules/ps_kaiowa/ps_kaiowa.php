@@ -146,6 +146,7 @@ class Ps_Kaiowa extends PaymentModule
             || !$this->registerHook('displayOrderDetail')
             || !$this->registerHook('displayCustomerAccountForm')
             || !$this->registerHook('displayInvoice')
+            || !$this->registerHook('actionOrderStatusPostUpdate')
         ) {
             return false;
         }
@@ -251,6 +252,16 @@ class Ps_Kaiowa extends PaymentModule
 
     }
 
+    public function hookActionOrderStatusPostUpdate($params) {
+        $order_id = $params['id_order'];
+        if($order_id) {
+            $Order = new Order($order_id);
+            if(($Order->current_state >= 21 && $Order->current_state <= 27) && ($Order->current_state != $Order->current_cuote)) {
+                $Order->current_cuote = $Order->current_state;
+                $Order->update();
+            }
+        }
+    }
     public function hookActionFrontControllerSetVariables() {
 
         if(!empty($this->context->customer->id)) {
@@ -416,7 +427,7 @@ class Ps_Kaiowa extends PaymentModule
                     if ($response->cuota < 69900) {
                         $response->cuota = 0;
                     }
-                    $response->cuota = 150000;
+                    //$response->cuota = 150000;
                     return $response;
                 break;
                 case self::CONCILIATION:
@@ -828,7 +839,7 @@ class Ps_Kaiowa extends PaymentModule
 
         $newOption = new PaymentOption();
         $newOption->setModuleName($this->name)
-                ->setCallToActionText($this->trans('Paga la primera cuota desde Wompi', array(), 'Modules.Kaiowa.Shop'))
+                ->setCallToActionText($this->trans('Paga la primera cuota con: Tarjeta, Transferencia, Corresponsal bancario, Nequi o PSE', array(), 'Modules.Kaiowa.Shop'))
                 ->setAction($this->context->link->getModuleLink($this->name, 'validation', array(), true))
                 ->setAdditionalInformation($this->fetch('module:ps_kaiowa/views/templates/hook/ps_kaiowa_intro.tpl'));
         $payment_options = [

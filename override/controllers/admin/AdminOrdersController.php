@@ -103,6 +103,10 @@ class AdminOrdersController extends AdminOrdersControllerCore
                 'title' => $this->trans('Documento', array(), 'Admin.Global'),
                 'havingFilter' => true,
             ),
+            'imei' => array(
+                'title' => $this->trans('imei', array(), 'Admin.Global'),
+                'havingFilter' => true,
+            ),
         );
 
         if (Configuration::get('PS_B2B_ENABLE')) {

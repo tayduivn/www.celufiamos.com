@@ -60,4 +60,4 @@
 		</div>
 	</div>
 </div>
-{include file="modules/ps_store/views/templates/front/modal-payment.tpl"}
+{include file="modules/ps_store/views/templates/front/modal-payment-imei.tpl"}

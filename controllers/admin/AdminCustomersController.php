@@ -88,6 +88,9 @@ class AdminCustomersControllerCore extends AdminController
                 'align' => 'text-center',
                 'class' => 'fixed-width-xs',
             ),
+            'document' => array(
+                'title' => $this->trans('Documento', array(), 'Admin.Global'),
+            ),
             'title' => array(
                 'title' => $this->trans('Social title', array(), 'Admin.Global'),
                 'filter_key' => 'a!id_gender',

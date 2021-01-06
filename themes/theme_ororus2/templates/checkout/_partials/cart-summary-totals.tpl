@@ -39,7 +39,7 @@
     </div>
   {/block}
     <div class="alert alert-info text-center" style="margin-top: 20px" role="alert">
-      Recuerda que para que tu equipo pueda ser enviado y entregado debes pagar la primera cuota en los próximos 5 días, si no lo haces tu proceso de compra queda anulado y debes volverlo a realizar. 
+      Recuerda que para que tu equipo pueda ser enviado y entregado debes pagar la primera cuota, si no lo haces, tu proceso de compra queda anulado y debes volverlo a realizar. 
     </div> 
 
 </div>

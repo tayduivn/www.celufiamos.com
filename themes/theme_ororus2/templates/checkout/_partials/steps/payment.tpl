@@ -118,9 +118,11 @@
 
   <div id="payment-confirmation">
     <div class="ps-shown-by-js">
-      <button type="submit" {if !$selected_payment_option} disabled {/if} class="btn btn-primary center-block">
-        {l s='Order with an obligation to pay' d='Shop.Theme.Checkout'}
+      <div class="row" style="margin-top:20px"> 
+      <button type="submit" {if !$selected_payment_option} disabled {/if} class="btn btn-success center-block col-md-6">
+        {l s='PAGAR PRIMERA CUOTA' d='Shop.Theme.Checkout'}
       </button>
+      </div>
       {if $show_final_summary}
         <article class="alert alert-danger mt-2 js-alert-payment-conditions" role="alert" data-alert="danger">
           {l

@@ -1,3 +1,45 @@
+{if $smarty.get.controller == 'AdminOrders'}
+<div class="panel">
+  <div class="panel-heading">
+    <i class="icon-shopping-cart"></i>
+      IMEI <span class="badge">1</span>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-md-9">
+        <input value="{$imei}" type="text" id="order-imei">
+      </div>
+      <div class="col-md-3">
+        <button id="save-order-imei" class="btn btn-success">GUARDAR</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  $('#save-order-imei').on('click', function(e){
+    if(!$('#order-imei').val()) {
+      alert('Ingrese el IMEI');
+    } else {
+      $.ajax({
+        type: "POST",
+        url: window.location.origin + '/responses?type=saveimei',
+        data: {
+          imei: $('#order-imei').val(),
+          order: '{$smarty.get.id_order}'
+        },
+        success: function(data) {
+          alert('IMEI actualizado')
+        },
+        fail: function(data) {
+          window.location.replace('Error al actualizar el IMEI');
+        },
+      });
+    }
+  })
+</script>
+{/if}
+
+
 <div class="panel">
   <div class="panel-heading">
     <i class="icon-shopping-cart"></i>

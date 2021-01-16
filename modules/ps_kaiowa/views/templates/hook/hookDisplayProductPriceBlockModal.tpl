@@ -10,7 +10,7 @@
 {l s='Para comprar este equipo primero debes registrarte y el sistema te asignará una cuota. Recuerda que puedes comprar equipos con cuotas iguales o inferiores a las que te asigna Celufiamos.' d='Modules.ps_kaiowa.myaccount'}
 </p>
 <p style="text-align: center">
-<a class="btn btn-success" href="{$url_login}?create_account=1">{l s='Registrate aquí.' d='Modules.ps_kaiowa.myaccount'}</a>
+<!-- <a class="btn btn-success" href="{$url_login}?create_account=1">{l s='Registrate aquí.' d='Modules.ps_kaiowa.myaccount'}</a>-->
 </p>
 </div>
 {else}

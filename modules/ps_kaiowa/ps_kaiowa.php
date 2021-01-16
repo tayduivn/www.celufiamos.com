@@ -344,12 +344,13 @@ class Ps_Kaiowa extends PaymentModule
 
 
     private function _getWompiConfig($id_obligacion = null, $obligacion = null) {
+        $page = $this->context->controller->php_self;
         if(!empty($id_obligacion)) {
             $reference = base64_encode($id_obligacion.'|'.$this->context->customer->id.'|'.time());
             $amountInCents = $obligacion->valor_cuota.'00';
             $redirectURL = $this->context->link->getModuleLink('ps_kaiowa', 'responses',array('type' => 'paymentQuotes'));
         } else {
-            $page = $this->context->controller->php_self;
+            
             if ($page == 'order-detail') {
                 $Cart = $this->context->cart->getCartByOrderId(Tools::getValue('id_order'));
                 $reference = base64_encode($Cart->id.'|'.$Cart->id_customer.'|'.time());
@@ -763,6 +764,10 @@ class Ps_Kaiowa extends PaymentModule
         $this->context->controller->addJS($this->_path.'ps_kaiowa.js');
         $this->context->controller->registerJavascript('remote-wompi', 'https://checkout.wompi.co/widget.js', ['server' => 'remote', 'position' => 'bottom', 'priority' => 20]);
         $this->_checkUserhasCupo();
+        $page = $this->context->controller->php_self;
+        if ($page == 'index') {
+            return $this->display(__FILE__, 'views/templates/hook/modal-message.tpl');            
+        }
     }
 
     public function disableCustomer($customer_id) {

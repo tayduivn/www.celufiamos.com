@@ -1,5 +1,6 @@
 (function ( $ ) {
 	$(document).ready(function($) {
+		$('#exampleModal').modal();
 	    if(prestashop.cart != undefined && prestashop.cart.products_count >= 1) {
 	      	$('.add').parent().addClass('cart-disabled');
 	      	$('.add').find('input, button').attr('disabled',true);
